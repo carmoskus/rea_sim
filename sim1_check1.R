@@ -87,14 +87,37 @@ colMeans(r1 > 0)
 
 r2 = analyze(range, "edgeR")
 colMeans(r2)
-colSums(r2)
+colMeans(r2 > 0)
 
 r3 = analyze(range, "voom")
 colMeans(r3)
+colMeans(r3 > 0)
 
 r4 = analyze(range, "ttest")
 colMeans(r4)
+colMeans(r4 > 0)
 
 r5 = analyze(range, "deseq2_notrim")
 colMeans(r5)
+colMeans(r5 > 0)
+
+# Use t-tests to see if simulated results match expectations
+r = r1
+t.test(r[[9]], mu=0.01)
+t.test(r[[10]], mu=0.05)
+t.test(r[[11]], mu=0.20)
+t.test(r[[12]], mu=0.01)
+t.test(r[[13]], mu=0.05)
+t.test(r[[14]], mu=0.20)
+
+# Second version of tests
+r = r5
+s = matrix(as.integer(r > 0), nrow=nrow(r), ncol=ncol(r))
+
+prop.test(sum(s[,9]), nrow(s), p=0.01)
+prop.test(sum(s[,10]), nrow(s), p=0.05)
+prop.test(sum(s[,11]), nrow(s), p=0.20)
+prop.test(sum(s[,12]), nrow(s), p=0.01)
+prop.test(sum(s[,13]), nrow(s), p=0.05)
+prop.test(sum(s[,14]), nrow(s), p=0.20)
 

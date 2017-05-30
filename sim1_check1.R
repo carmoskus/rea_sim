@@ -53,21 +53,6 @@ checker = function (name) {
     }
 }
 
-        # Output proportions of failed tests
-#        c(sum(adj.pvals1 < th[1], na.rm=TRUE) / n,
-#          sum(adj.pvals1 < th[2], na.rm=TRUE) / n,
-#          sum(adj.pvals1 < th[3], na.rm=TRUE) / n,
-#          sum(adj.pvals2 < th[1], na.rm=TRUE) / n2,
-#          sum(adj.pvals2 < th[2], na.rm=TRUE) / n2,
-#          sum(adj.pvals2 < th[3], na.rm=TRUE) / n2,
-#          n, n2,
-#          sum(adj.pvals3 < th[1], na.rm=TRUE) / n,
-#          sum(adj.pvals3 < th[2], na.rm=TRUE) / n,
-#          sum(adj.pvals3 < th[3], na.rm=TRUE) / n,
-#          sum(adj.pvals4 < th[1], na.rm=TRUE) / n2,
-#          sum(adj.pvals4 < th[2], na.rm=TRUE) / n,
-#          sum(adj.pvals4 < th[3], na.rm=TRUE) / n)
-
 analyze = function (range, mode) {
     r = sapply(range, checker(mode))
     r = as.data.frame(t(r), stringsAsFactors=FALSE)
@@ -80,6 +65,7 @@ analyze = function (range, mode) {
 }
 
 range = 1:1000
+range = 1001:2000
 
 r1 = analyze(range, "deseq2")
 colMeans(r1)

@@ -1,7 +1,7 @@
 args = commandArgs(trailingOnly=TRUE)
 arg1 = args[1]
 
-subdir = paste0("a/", arg1, "/")
+subdir = paste0("b/", arg1, "/")
 
 counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
 

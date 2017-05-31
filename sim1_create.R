@@ -3,6 +3,7 @@ arg1 = args[1]
 
 # Generate row data
 n = 1000
+n.zeros = 100
 
 p.ex = 1-0.75
 m.ex = 9.5
@@ -20,7 +21,10 @@ psis = rgamma(n, shape=psi.shape, rate=psi.rate)+psi.offset
 
 # Generate counts
 ns = 100
-x = replicate(ns, rnbinom(n, mu=2^log2means, size=1/psis^2))
+means = c(2^log2means, rep(0, n.zeros))
+log2means = c(log2means, rep(NA, n.zeros))
+psis = c(psis, rep(1, n.zeros))
+x = replicate(ns, rnbinom(n+n.zeros, mu=means, size=1/psis^2))
 
 # Output
 subdir = paste0("a/", arg1, "/")
@@ -33,11 +37,11 @@ write.table(x, file=paste0(subdir, "counts.txt"), quote=FALSE, sep="\t")
 
 # Output meta information
 meta = matrix(c("p.ex", p.ex, "m.ex", m.ex, "sd.ex", sd.ex, "m.uex", m.uex, "sd.uex", sd.uex,
-                    "psi.shape", psi.shape, "psi.rate", psi.rate, "psi.offset", psi.offset), ncol=2, byrow=TRUE)
+                    "psi.shape", psi.shape, "psi.rate", psi.rate, "psi.offset", psi.offset, "n", n, "n.zeros", n.zeros), ncol=2, byrow=TRUE)
 write.table(meta, file=paste0(subdir, "meta.txt"), quote=FALSE, row.names=FALSE, col.names=FALSE, sep="\t")
 
 # Output row info
-row.info = cbind(log2mean=log2means, psi=psis)
+row.info = cbind(log2mean=log2means, mean=means, psi=psis)
 rownames(row.info) = rownames(x)
 write.table(row.info, file=paste0(subdir, "rows.txt"), quote=FALSE, sep="\t")
 

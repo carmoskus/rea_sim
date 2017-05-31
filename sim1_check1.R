@@ -66,6 +66,8 @@ analyze = function (range, mode) {
 
 range = 1:1000
 range = 1001:2000
+range = 2001:3000
+range = 3001:4000
 
 r1 = analyze(range, "deseq2")
 colMeans(r1)

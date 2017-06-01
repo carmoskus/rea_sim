@@ -68,6 +68,8 @@ r3 = analyze(range, "voom")
 r4 = analyze(range, "ttest")
 r5 = analyze(range, "deseq2_notrim")
 
+Sys.sleep(3)
+
 colMeans(r1)
 r = r1
 for (i in 1:11)

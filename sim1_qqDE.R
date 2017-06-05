@@ -3,7 +3,7 @@ df = 1
 
 checker = function (name) {
     function (i) {
-        subdir = "a"
+        subdir = "b"
         de = read.csv(paste0(subdir, "/",i,"/",name,"_res.csv"), row.names=1)
         nam = names(de)
         
@@ -77,6 +77,8 @@ range = 2001:3000
 range = 3001:4000
 range = 4001:5000
 
+range = 1:5000
+
 r1 = analyze(range, "deseq2")
 r2 = analyze(range, "edgeR")
 r3 = analyze(range, "voom")
@@ -116,5 +118,12 @@ colMeans(r1[r1[,14] > 0,])
 
 colMeans(r1[r1[,15] > 0,])
 
+# Analyses with more DEX genes have higher inflation
+colMeans(r1)
 colMeans(r1[r1[,16] > 0,])
 colMeans(r1[r1[,16] > 1,])
+
+# Analyses with higher inflation have more DEX genes
+colMeans(r1)
+colMeans(r1[r1[,5] > 1,])
+colMeans(r1[r1[,5] < 1,])

@@ -3,7 +3,7 @@ arg1 = args[1]
 
 # Generate row data
 n = 1000
-n.dex = 50
+n.dex = 100
 n.zeros = 100
 n.tot = n + n.dex + n.zeros
 
@@ -55,7 +55,7 @@ x[, group == "a"] = a
 x[, group == "b"] = b
 
 # Output
-subdir = paste0("b/", arg1, "/")
+subdir = paste0("c/", arg1, "/")
 dir.create(subdir)
 
 # Output created sample

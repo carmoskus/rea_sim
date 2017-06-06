@@ -3,7 +3,7 @@ df = 1
 
 checker = function (name) {
     function (i) {
-        subdir = "b"
+        subdir = "a"
         de = read.csv(paste0(subdir, "/",i,"/",name,"_res.csv"), row.names=1)
         nam = names(de)
         
@@ -46,32 +46,28 @@ checker = function (name) {
         adj.pvals3 = p.adjust(exp.pvals, method="bonferroni")
         adj.pvals4 = p.adjust(pvals, method="bonferroni")
         
-        th = c(0.01, 0.05, 0.20)
+        th = seq(from=0.01, to=0.99, by=0.01)
+        fwer3 = sapply(th, function (t) ifelse(any(adj.pvals3 < t, na.rm=TRUE), 1, 0))
+        fwer4 = sapply(th, function (t) ifelse(any(adj.pvals4 < t, na.rm=TRUE), 1, 0))
+            
         # Output counts of failed tests and lambdas
         c(exp.lambda, n / n2 * 100, all.lambda,
           n, n2,
-          sum(adj.pvals3 < th[1], na.rm=TRUE),
-          sum(adj.pvals3 < th[2], na.rm=TRUE),
-          sum(adj.pvals3 < th[3], na.rm=TRUE),
-          sum(adj.pvals4 < th[1], na.rm=TRUE),
-          sum(adj.pvals4 < th[2], na.rm=TRUE),
-          sum(adj.pvals4 < th[3], na.rm=TRUE))
+          fwer3, fwer4)
     }
 }
 
 analyze = function (range, mode) {
     r = sapply(range, checker(mode))
     r = as.data.frame(t(r), stringsAsFactors=FALSE)
-    names(r) = c("Exp at 0.5", "Exp at 0.75", "Exp at 0.9", "Exp at 0.95", "Exp at 0.99",
+    names(r)[1:13] = c("Exp at 0.5", "Exp at 0.75", "Exp at 0.9", "Exp at 0.95", "Exp at 0.99",
              "% Exp",
              "All at 0.5", "All at 0.75", "All at 0.9", "All at 0.95", "All at 0.99",
-             "Num Expressed", "Num Total",
-             "Exp.Bon < 0.01", "Exp.Bon < 0.05", "Exp.Bon < 0.20",
-             "All.Bon < 0.01", "All.Bon < 0.05", "All.Bon < 0.20")
+             "Num Expressed", "Num Total")
     r
 }
 
-range = 1:1000
+range = 1:50
 range = 1001:2000
 range = 2001:3000
 range = 3001:4000
@@ -85,6 +81,16 @@ r3 = analyze(range, "voom")
 r4 = analyze(range, "ttest")
 r5 = analyze(range, "deseq2_notrim")
 
+Sys.sleep(3)
+r = r5
+for (i in 1:13) {
+    print(colnames(r)[i])
+    print(quantile(r[,i], probs=c(0.025, 0.5, 0.975)))
+}
+
+df = data.frame(alpha=seq(from=0.01, to=0.99, by=0.01), eFWER=colMeans(r[,14:ncol(r)]))
+write.table(df, file="a_r5_FWER.txt", sep="\t", row.names=FALSE, quote=FALSE)
+    
 Sys.sleep(3)
 
 colMeans(r1)

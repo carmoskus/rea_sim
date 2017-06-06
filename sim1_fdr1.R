@@ -24,7 +24,6 @@ checker = function (name) {
             pvals = de$p.value
             expressed = de$baseMean > log2(3.5+0.505)
         }
-        pvals = pvals
         exp.pvals = pvals
         exp.pvals[is.na(expressed) | ! expressed] = NA
         
@@ -102,51 +101,8 @@ range = 4001:5000
 
 range = 1:5000
 
-r1 = analyze(range, "deseq2")
-r2 = analyze(range, "edgeR")
-r3 = analyze(range, "voom")
-r4 = analyze(range, "ttest")
-r5 = analyze(range, "deseq2_notrim")
-
-Sys.sleep(3)
-
-colMeans(r1)
-r = r1
-for (i in 1:11)
-    print(c(min(r[,i]), median(r[,i]), max(r[,i])))
-
-colMeans(r2)
-r = r2
-for (i in 1:11)
-    print(c(min(r[,i]), median(r[,i]), max(r[,i])))
-
-colMeans(r3)
-r = r3
-for (i in 1:11)
-    print(c(min(r[,i]), median(r[,i]), max(r[,i])))
-
-colMeans(r4)
-r = r4
-for (i in 1:11)
-    print(c(min(r[,i]), median(r[,i]), max(r[,i])))
-
-colMeans(r5)
-r = r5
-for (i in 1:11)
-    print(c(min(r[,i]), median(r[,i]), max(r[,i])))
-
-data.frame(colnames(r1))
-colMeans(r1)
-colMeans(r1[r1[,14] > 0,])
-
-colMeans(r1[r1[,15] > 0,])
-
-# Analyses with more DEX genes have higher inflation
-colMeans(r1)
-colMeans(r1[r1[,16] > 0,])
-colMeans(r1[r1[,16] > 1,])
-
-# Analyses with higher inflation have more DEX genes
-colMeans(r1)
-colMeans(r1[r1[,5] > 1,])
-colMeans(r1[r1[,5] < 1,])
+#r1 = analyze(range, "deseq2")
+#r2 = analyze(range, "edgeR")
+#r3 = analyze(range, "voom")
+#r4 = analyze(range, "ttest")
+#r5 = analyze(range, "deseq2_notrim")

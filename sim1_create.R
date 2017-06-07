@@ -3,7 +3,7 @@ arg1 = args[1]
 
 # Generate row data
 n = 1000
-n.dex = 100
+n.dex = 50
 n.zeros = 100
 n.tot = n + n.dex + n.zeros
 
@@ -13,8 +13,8 @@ sd.ex = 2.5
 m.uex = -0.7
 sd.uex = 3.7
 
-min.fc = 0.1
-max.fc = 1.0
+min.fc = 0.05
+max.fc = 0.5
 
 ex = c(rbinom(n, 1, p.ex), rep(1, n.dex))
 log2means = ifelse(ex, rnorm(n+n.dex, mean=m.ex, sd=sd.ex), rnorm(n+n.dex, mean=m.uex, sd=sd.uex))
@@ -55,7 +55,7 @@ x[, group == "a"] = a
 x[, group == "b"] = b
 
 # Output
-subdir = paste0("c/", arg1, "/")
+subdir = paste0("d/", arg1, "/")
 dir.create(subdir)
 
 # Output created sample

@@ -5,7 +5,7 @@ arg2 = as.integer(args[2])
 checker = function (name) {
     function (i) {
 #        de = read.csv(paste0("a/",i,"/",name,"_res.csv"), row.names=1)
-        de = read.csv(paste0("b/",i,"/",name,"_res.csv"), row.names=1)
+        de = read.csv(paste0("a/",i,"/",name,"_res.csv"), row.names=1)
         nam = names(de)
         
         if ("logCPM" %in% nam) {
@@ -28,8 +28,6 @@ checker = function (name) {
         exp.pvals = pvals
         exp.pvals[is.na(expressed) | ! expressed] = NA
         
-        adj.pvals1 = p.adjust(exp.pvals, method="BH")
-        adj.pvals2 = p.adjust(pvals, method="BH")
         adj.pvals3 = p.adjust(exp.pvals, method="bonferroni")
         adj.pvals4 = p.adjust(pvals, method="bonferroni")
         
@@ -38,13 +36,7 @@ checker = function (name) {
 
         th = c(0.01, 0.05, 0.20)
         # Output counts of failed tests
-        c(sum(adj.pvals1 < th[1], na.rm=TRUE),
-          sum(adj.pvals1 < th[2], na.rm=TRUE),
-          sum(adj.pvals1 < th[3], na.rm=TRUE),
-          sum(adj.pvals2 < th[1], na.rm=TRUE),
-          sum(adj.pvals2 < th[2], na.rm=TRUE),
-          sum(adj.pvals2 < th[3], na.rm=TRUE),
-          n, n2,
+        c(n, n2,
           sum(adj.pvals3 < th[1], na.rm=TRUE),
           sum(adj.pvals3 < th[2], na.rm=TRUE),
           sum(adj.pvals3 < th[3], na.rm=TRUE),
@@ -57,9 +49,7 @@ checker = function (name) {
 analyze = function (range, mode) {
     r = sapply(range, checker(mode))
     r = as.data.frame(t(r), stringsAsFactors=FALSE)
-    names(r) = c("Exp.FDR < 0.01", "Exp.FDR < 0.05", "Exp.FDR < 0.20",
-             "All.FDR < 0.01", "All.FDR < 0.05", "All.FDR < 0.20",
-             "Num Expressed", "Num Total",
+    names(r) = c("Num Expressed", "Num Total",
              "Exp.Bon < 0.01", "Exp.Bon < 0.05", "Exp.Bon < 0.20",
              "All.Bon < 0.01", "All.Bon < 0.05", "All.Bon < 0.20")
     r
@@ -70,6 +60,8 @@ range = 1001:2000
 range = 2001:3000
 range = 3001:4000
 range = 4001:5000
+
+range = 1:5000
 
 r1 = analyze(range, "deseq2")
 colMeans(r1)
@@ -91,32 +83,6 @@ r5 = analyze(range, "deseq2_notrim")
 colMeans(r5)
 colMeans(r5 > 0)
 
-# Use t-tests to see if simulated results match expectations
-r = r1
-t.test(r[[9]], mu=0.01)
-t.test(r[[10]], mu=0.05)
-t.test(r[[11]], mu=0.20)
-t.test(r[[12]], mu=0.01)
-t.test(r[[13]], mu=0.05)
-t.test(r[[14]], mu=0.20)
-
-# Second version of tests
-i = 1
-for (r in list(r1, r2, r3, r4, r5)) {
-    
-    s = matrix(as.integer(r > 0), nrow=nrow(r), ncol=ncol(r))
-
-    print(i)
-    print(prop.test(sum(s[,9]), nrow(s), p=0.01))
-    print(prop.test(sum(s[,10]), nrow(s), p=0.05))
-    print(prop.test(sum(s[,11]), nrow(s), p=0.20))
-    print(prop.test(sum(s[,12]), nrow(s), p=0.01))
-    print(prop.test(sum(s[,13]), nrow(s), p=0.05))
-    print(prop.test(sum(s[,14]), nrow(s), p=0.20))
-
-    i = i + 1
-}
-
 # Third version of tests
 i = 1
 for (r in list(r1, r2, r3, r4, r5)) {
@@ -124,12 +90,12 @@ for (r in list(r1, r2, r3, r4, r5)) {
     s = matrix(as.integer(r > 0), nrow=nrow(r), ncol=ncol(r))
 
     print(i)
-    print(binom.test(sum(s[,9]), nrow(s), p=0.01))
-    print(binom.test(sum(s[,10]), nrow(s), p=0.05))
-    print(binom.test(sum(s[,11]), nrow(s), p=0.20))
-    print(binom.test(sum(s[,12]), nrow(s), p=0.01))
-    print(binom.test(sum(s[,13]), nrow(s), p=0.05))
-    print(binom.test(sum(s[,14]), nrow(s), p=0.20))
+    print(binom.test(sum(s[,3]), nrow(s), p=0.01))
+    print(binom.test(sum(s[,4]), nrow(s), p=0.05))
+    print(binom.test(sum(s[,5]), nrow(s), p=0.20))
+    print(binom.test(sum(s[,6]), nrow(s), p=0.01))
+    print(binom.test(sum(s[,7]), nrow(s), p=0.05))
+    print(binom.test(sum(s[,8]), nrow(s), p=0.20))
 
     i = i + 1
 }

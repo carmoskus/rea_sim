@@ -1,6 +1,5 @@
-args = commandArgs(trailingOnly=TRUE)
-arg1 = as.integer(args[1])
-arg2 = as.integer(args[2])
+#args = commandArgs(trailingOnly=TRUE)
+#arg1 = as.integer(args[1])
 
 checker = function (name) {
     function (i) {
@@ -82,6 +81,26 @@ colMeans(r4 > 0)
 r5 = analyze(range, "deseq2_notrim")
 colMeans(r5)
 colMeans(r5 > 0)
+
+r6 = analyze(range, "d2notrim_sva1")
+colMeans(r6)
+colMeans(r6 > 0)
+
+r7 = analyze(range, "d2notrim_sva2")
+colMeans(r7)
+colMeans(r7 > 0)
+
+r8 = analyze(range, "d2notrim_sva3")
+colMeans(r8)
+colMeans(r8 > 0)
+
+r9 = analyze(range, "d2notrim_sva4")
+colMeans(r9)
+colMeans(r9 > 0)
+
+r10 = analyze(range, "d2notrim_sva5")
+colMeans(r10)
+colMeans(r10 > 0)
 
 # Third version of tests
 i = 1

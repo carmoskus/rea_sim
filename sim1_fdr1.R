@@ -82,7 +82,7 @@ checker = function (name) {
 analyze = function (range, mode) {
     r = sapply(range, checker(mode))
     r = as.data.frame(t(r), stringsAsFactors=FALSE)
-    names(r5) = c("Exp at 0.5", "Exp at 0.75", "Exp at 0.9", "Exp at 0.95", "Exp at 0.99",
+    names(r) = c("Exp at 0.5", "Exp at 0.75", "Exp at 0.9", "Exp at 0.95", "Exp at 0.99",
              "% Exp",
              "All at 0.5", "All at 0.75", "All at 0.9", "All at 0.95", "All at 0.99",
              
@@ -105,11 +105,20 @@ r1 = analyze(range, "deseq2")
 r2 = analyze(range, "edgeR")
 r3 = analyze(range, "voom")
 r4 = analyze(range, "ttest")
+
 r5 = analyze(range, "deseq2_notrim")
 
+r6 = analyze(range, "d2notrim_sva1")
+r7 = analyze(range, "d2notrim_sva2")
+r8 = analyze(range, "d2notrim_sva3")
+r9 = analyze(range, "d2notrim_sva4")
+r10 = analyze(range, "d2notrim_sva5")
+
 # Do t-tests
-i = 1
-for (r in list(r1, r2, r3, r4, r5)) {
+Sys.sleep(2)
+i = 0
+#for (r in list(r1, r2, r3, r4, r5)) {
+for (r in list(r5, r6, r7, r8, r9, r10)) {
     print(i)
     print(t.test(r[["Exp.FDR 0.01"]], mu=0.01))
     print(t.test(r[["Exp.FDR at 0.05"]], mu=0.05))

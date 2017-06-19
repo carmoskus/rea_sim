@@ -52,8 +52,8 @@ checker = function (name) {
             
         # Output counts of failed tests and lambdas
         c(exp.lambda, n / n2 * 100, all.lambda,
-          n, n2,
-          fwer3, fwer4)
+          n, n2, fwer3,
+          n, n2, fwer4)
     }
 }
 

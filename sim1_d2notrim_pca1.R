@@ -2,7 +2,7 @@ args = commandArgs(trailingOnly=TRUE)
 arg1 = args[1]
 arg2 = as.integer(args[2])
 
-subdir = paste0("b/", arg1, "/")
+subdir = paste0("a/", arg1, "/")
 name = paste0("d2notrim_pca1n", arg2)
 
 paste0(subdir, name)

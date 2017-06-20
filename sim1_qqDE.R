@@ -3,7 +3,7 @@ df = 1
 
 checker = function (name) {
     function (i) {
-        subdir = "a"
+        subdir = "b"
         de = read.csv(paste0(subdir, "/",i,"/",name,"_res.csv"), row.names=1)
         nam = names(de)
         
@@ -87,18 +87,25 @@ r8 = analyze(range, "d2notrim_sva3")
 r9 = analyze(range, "d2notrim_sva4")
 r10 = analyze(range, "d2notrim_sva5")
 
-r11 = analyze(range, "d2notrim_pca1")
-r12 = analyze(range, "d2notrim_pca2")
-r13 = analyze(range, "d2notrim_pca3")
-r14 = analyze(range, "d2notrim_pca4")
-r15 = analyze(range, "d2notrim_pca5")
+r11 = analyze(range, "d2notrim_pca1n1")
+r12 = analyze(range, "d2notrim_pca1n2")
+r13 = analyze(range, "d2notrim_pca1n3")
+r14 = analyze(range, "d2notrim_pca1n4")
+r15 = analyze(range, "d2notrim_pca1n5")
 
+write.table(r5, file="summaries/b1-5k_qqDE_d2notrim.txt", sep="\t", quote=FALSE)
 
-write.table(r11, file="summaries/a1-5k_qqDE_d2notrim_pca1.txt", sep="\t", quote=FALSE)
-write.table(r12, file="summaries/a1-5k_qqDE_d2notrim_pca2.txt", sep="\t", quote=FALSE)
-write.table(r13, file="summaries/a1-5k_qqDE_d2notrim_pca3.txt", sep="\t", quote=FALSE)
-write.table(r14, file="summaries/a1-5k_qqDE_d2notrim_pca4.txt", sep="\t", quote=FALSE)
-write.table(r15, file="summaries/a1-5k_qqDE_d2notrim_pca5.txt", sep="\t", quote=FALSE)
+write.table(r6, file="summaries/b1-5k_qqDE_d2notrim_sva1.txt", sep="\t", quote=FALSE)
+write.table(r7, file="summaries/b1-5k_qqDE_d2notrim_sva2.txt", sep="\t", quote=FALSE)
+write.table(r8, file="summaries/b1-5k_qqDE_d2notrim_sva3.txt", sep="\t", quote=FALSE)
+write.table(r9, file="summaries/b1-5k_qqDE_d2notrim_sva4.txt", sep="\t", quote=FALSE)
+write.table(r10, file="summaries/b1-5k_qqDE_d2notrim_sva5.txt", sep="\t", quote=FALSE)
+
+write.table(r11, file="summaries/b1-5k_qqDE_d2notrim_pca1.txt", sep="\t", quote=FALSE)
+write.table(r12, file="summaries/b1-5k_qqDE_d2notrim_pca2.txt", sep="\t", quote=FALSE)
+write.table(r13, file="summaries/b1-5k_qqDE_d2notrim_pca3.txt", sep="\t", quote=FALSE)
+write.table(r14, file="summaries/b1-5k_qqDE_d2notrim_pca4.txt", sep="\t", quote=FALSE)
+write.table(r15, file="summaries/b1-5k_qqDE_d2notrim_pca5.txt", sep="\t", quote=FALSE)
 
 Sys.sleep(3)
 r = r5

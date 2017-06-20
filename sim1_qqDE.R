@@ -81,6 +81,21 @@ r3 = analyze(range, "voom")
 r4 = analyze(range, "ttest")
 r5 = analyze(range, "deseq2_notrim")
 
+r6 = analyze(range, "d2notrim_sva1")
+r7 = analyze(range, "d2notrim_sva2")
+r8 = analyze(range, "d2notrim_sva3")
+r9 = analyze(range, "d2notrim_sva4")
+r10 = analyze(range, "d2notrim_sva5")
+
+r11 = analyze(range, "d2notrim_pca1")
+r12 = analyze(range, "d2notrim_pca2")
+r13 = analyze(range, "d2notrim_pca3")
+r14 = analyze(range, "d2notrim_pca4")
+r15 = analyze(range, "d2notrim_pca5")
+
+
+write.table(r6, file="summaries/a1-5k_qqDE_d2notrim_sva1.txt", sep="\t", quote=FALSE)
+
 Sys.sleep(3)
 r = r5
 for (i in 1:13) {

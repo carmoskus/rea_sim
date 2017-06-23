@@ -3,7 +3,7 @@ df = 1
 
 checker = function (name) {
     function (i) {
-        subdir = "b"
+        subdir = "a"
         de = read.csv(paste0(subdir, "/",i,"/",name,"_res.csv"), row.names=1)
         nam = names(de)
         
@@ -101,11 +101,11 @@ write.table(r8, file="summaries/b1-5k_qqDE_d2notrim_sva3.txt", sep="\t", quote=F
 write.table(r9, file="summaries/b1-5k_qqDE_d2notrim_sva4.txt", sep="\t", quote=FALSE)
 write.table(r10, file="summaries/b1-5k_qqDE_d2notrim_sva5.txt", sep="\t", quote=FALSE)
 
-write.table(r11, file="summaries/b1-5k_qqDE_d2notrim_pca1.txt", sep="\t", quote=FALSE)
-write.table(r12, file="summaries/b1-5k_qqDE_d2notrim_pca2.txt", sep="\t", quote=FALSE)
-write.table(r13, file="summaries/b1-5k_qqDE_d2notrim_pca3.txt", sep="\t", quote=FALSE)
-write.table(r14, file="summaries/b1-5k_qqDE_d2notrim_pca4.txt", sep="\t", quote=FALSE)
-write.table(r15, file="summaries/b1-5k_qqDE_d2notrim_pca5.txt", sep="\t", quote=FALSE)
+write.table(r11, file="summaries/a1-5k_qqDE_d2notrim_pca1.txt", sep="\t", quote=FALSE)
+write.table(r12, file="summaries/a1-5k_qqDE_d2notrim_pca2.txt", sep="\t", quote=FALSE)
+write.table(r13, file="summaries/a1-5k_qqDE_d2notrim_pca3.txt", sep="\t", quote=FALSE)
+write.table(r14, file="summaries/a1-5k_qqDE_d2notrim_pca4.txt", sep="\t", quote=FALSE)
+write.table(r15, file="summaries/a1-5k_qqDE_d2notrim_pca5.txt", sep="\t", quote=FALSE)
 
 Sys.sleep(3)
 r = r5

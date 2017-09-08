@@ -1,9 +1,9 @@
 
 df = 1
+subdir = "b"
 
 checker = function (name) {
     function (i) {
-        subdir = "a"
         de = read.csv(paste0(subdir, "/",i,"/",name,"_res.csv"), row.names=1)
         nam = names(de)
         
@@ -67,13 +67,25 @@ analyze = function (range, mode) {
     r
 }
 
-range = 1:50
-range = 1001:2000
-range = 2001:3000
-range = 3001:4000
-range = 4001:5000
-
 range = 1:5000
+
+modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim")
+
+modes = c(modes, paste0("d2notrim_pca1n", 1:5)
+modes = c(modes, paste0("d2notrim_sva", 1:5)
+modes = c(modes, paste0("edgeR_pca1", 1:5)
+modes = c(modes, paste0("edgeR_sva", 1:5)
+
+args = commandArgs(trailingOnly=TRUE)
+arg1 = as.integer(args[1])
+
+if (!is.na(arg1) || arg1 < 1) {
+    r = analyze(range, modes[arg1])
+    # Output results
+    write.table(r, file=paste0("summaries/", subdir, "1-5k_qqDE_", modes[arg1], ".txt"), sep="\t", quote=FALSE)
+}
+
+quit(save="no")
 
 r1 = analyze(range, "deseq2")
 r2 = analyze(range, "edgeR")

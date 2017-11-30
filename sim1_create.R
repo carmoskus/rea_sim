@@ -1,5 +1,11 @@
 args = commandArgs(trailingOnly=TRUE)
-arg1 = args[1]
+arg.dir = args[1]
+arg.num = args[2]
+
+if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) == 0) {
+    write("Usage: sim1_create.R subdir num\n", stderr())
+    quit(save="no", status=1)
+}
 
 # Generate row data
 n = 1000
@@ -13,15 +19,15 @@ sd.ex = 2.5
 m.uex = -0.7
 sd.uex = 3.7
 
-min.fc = 0.05
-max.fc = 0.5
+min.fc = 0.01
+max.fc = 0.2
 
 ex = c(rbinom(n, 1, p.ex), rep(1, n.dex))
 log2means = ifelse(ex, rnorm(n+n.dex, mean=m.ex, sd=sd.ex), rnorm(n+n.dex, mean=m.uex, sd=sd.uex))
 
 psi.shape = 2
 psi.rate = 6.3
-psi.offset = 0.21
+psi.offset = 0.41
 psis = rgamma(n+n.dex, shape=psi.shape, rate=psi.rate)+psi.offset
 
 
@@ -55,7 +61,7 @@ x[, group == "a"] = a
 x[, group == "b"] = b
 
 # Output
-subdir = paste0("sims/a/", arg1, "/")
+subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 dir.create(subdir)
 
 # Output created sample

@@ -55,7 +55,7 @@ x[, group == "a"] = a
 x[, group == "b"] = b
 
 # Output
-subdir = paste0("d/", arg1, "/")
+subdir = paste0("sims/a/", arg1, "/")
 dir.create(subdir)
 
 # Output created sample

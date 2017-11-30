@@ -3,7 +3,7 @@ arg.dir = args[1]
 arg.num = args[2]
 
 if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) == 0) {
-    write("Usage: sim1_create.R subdir num\n", stderr())
+    write("Usage: sim1_create.R subdir num", stderr())
     quit(save="no", status=1)
 }
 

@@ -1,9 +1,15 @@
 args = commandArgs(trailingOnly=TRUE)
-arg1 = args[1]
+arg.dir = args[1]
+arg.num = args[2]
 
-subdir = paste0("c/", arg1, "/")
+if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) == 0) {
+    write("Usage: prog.R subdir num", stderr())
+    quit(save="no", status=1)
+}
 
-name = "edgeR"
+subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
+
+name = "ttest"
 
 counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
 

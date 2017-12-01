@@ -13,23 +13,22 @@ n.dex = 50
 n.zeros = 100
 n.tot = n + n.dex + n.zeros
 
-p.ex = 1-0.75
+p.ex = 0.25
 m.ex = 9.5
 sd.ex = 2.5
 m.uex = -0.7
 sd.uex = 3.7
-
-min.fc = 0.01
-max.fc = 0.2
-
-ex = c(rbinom(n, 1, p.ex), rep(1, n.dex))
-log2means = ifelse(ex, rnorm(n+n.dex, mean=m.ex, sd=sd.ex), rnorm(n+n.dex, mean=m.uex, sd=sd.uex))
 
 psi.shape = 2
 psi.rate = 3.3
 psi.offset = 0.31
 psis = rgamma(n+n.dex, shape=psi.shape, rate=psi.rate)+psi.offset
 
+min.fc = 0.01
+max.fc = 0.2
+
+ex = c(rbinom(n, 1, p.ex), rep(1, n.dex))
+log2means = ifelse(ex, rnorm(n+n.dex, mean=m.ex, sd=sd.ex), rnorm(n+n.dex, mean=m.uex, sd=sd.uex))
 
 # Generate counts
 #ns = 100

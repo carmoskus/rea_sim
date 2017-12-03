@@ -7,8 +7,17 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
     quit(save="no", status=1)
 }
 
-## Check that output files do not already exist
+subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
+## Check that output files do not already exist
+if (file.exists(paste0(subdir, "")) || 
+    file.exists(paste0(subdir, "")) || 
+    file.exists(paste0(subdir, "")) || 
+    file.exists(paste0(subdir, ""))) {
+    write("Error: files to be outputted already exist", stderr())
+    quit(save="no", status=1)
+}
+    
 ## Generate row data
 n = 1000
 n.dex = 50
@@ -55,7 +64,6 @@ x[, group == "a"] = a
 x[, group == "b"] = b
 
 ## Output
-subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 dir.create(subdir)
 
 ## Output created sample

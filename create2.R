@@ -7,7 +7,8 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
     quit(save="no", status=1)
 }
 
-subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
+root.dir = "sims"
+subdir = paste0(root.dir, "/", arg.dir, "/", arg.num, "/")
 
 ## Check that output files do not already exist
 if (file.exists(paste0(subdir, "")) || 
@@ -17,46 +18,41 @@ if (file.exists(paste0(subdir, "")) ||
     write("Error: files to be outputted already exist", stderr())
     quit(save="no", status=1)
 }
-    
+
+## Read in settings from directory
+conf.file = paste0(root.dir, "/", arg.dir, "/meta.txt")
+if (!file.exists(conf.file)) {
+    write(paste0("Error: no configuration file found at '", conf.file, "'"), stderr())
+    quit(save="no", status=1)
+}
+
+conf.data = read.table(conf.file, sep="\t", stringsAsFactors=FALSE, row.names=1)
+conf = as.list(conf.data$V2)
+names(conf) = rownames(conf.data)
+
 ## Generate row data
-n = 1000
-n.dex = 50
-n.zeros = 100
-n.tot = n + n.dex + n.zeros
+ex = c(rbinom(conf$n, 1, conf$p.ex), rep(1, conf$n.dex))
+nm = conf$n+conf$n.dex
+n.tot = nm + conf$n.zeros
+log2means = ifelse(ex, rnorm(nm, mean=conf$m.ex, sd=conf$sd.ex), rnorm(nm, mean=conf$m.uex, sd=conf$sd.uex))
 
-p.ex = 0.25
-m.ex = 9.5
-sd.ex = 2.5
-m.uex = -0.7
-sd.uex = 3.7
-
-psi.shape = 2
-psi.rate = 3.3
-psi.offset = 0.31
-psis = rgamma(n+n.dex, shape=psi.shape, rate=psi.rate)+psi.offset
-
-min.fc = 0.01
-max.fc = 0.2
-
-ex = c(rbinom(n, 1, p.ex), rep(1, n.dex))
-log2means = ifelse(ex, rnorm(n+n.dex, mean=m.ex, sd=sd.ex), rnorm(n+n.dex, mean=m.uex, sd=sd.uex))
+psis = rgamma(nm, shape=conf$psi.shape, rate=conf$psi.rate)+conf$psi.offset
 
 ## Generate counts for 1 group at a time
-ns.g = 50
-ns = ns.g * 2
-means = c(2^log2means, rep(0, n.zeros))
-log2means = c(log2means, rep(NA, n.zeros))
-psis = c(psis, rep(1, n.zeros))
+ns = conf$ns.g * 2
+means = c(2^log2means, rep(0, conf$n.zeros))
+log2means = c(log2means, rep(NA, conf$n.zeros))
+psis = c(psis, rep(1, conf$n.zeros))
 
 ## Generate DEXness
-group = sample(rep(c("a","b"), ns.g), ns)
-log2FC = c(rep(0, n), sample(c(-1,1), n.dex, replace=TRUE)*runif(n.dex, min=min.fc, max=max.fc), rep(0, n.zeros))
+group = sample(rep(c("a","b"), conf$ns.g), ns)
+log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$n.dex, min=conf$min.fc, max=conf$max.fc), rep(0, conf$n.zeros))
 
 ## Group a is the base state
-a = replicate(ns.g, rnbinom(n.tot, mu=means, size=1/psis^2))
+a = replicate(conf$ns.g, rnbinom(n.tot, mu=means, size=1/psis^2))
 
 ## Group b is altered
-b = replicate(ns.g, rnbinom(n.tot, mu=means*2^log2FC, size=1/psis^2))
+b = replicate(conf$ns.g, rnbinom(n.tot, mu=means*2^log2FC, size=1/psis^2))
 
 ## Put them back together
 x = matrix(0, nrow=n.tot, ncol=ns)
@@ -72,12 +68,12 @@ colnames(x) = paste0("S",1:ncol(x))
 write.table(x, file=paste0(subdir, "counts.txt"), quote=FALSE, sep="\t")
 
 ## Output meta information
-meta = matrix(c("p.ex", p.ex, "m.ex", m.ex, "sd.ex", sd.ex, "m.uex", m.uex, "sd.uex", sd.uex,
-    "psi.shape", psi.shape, "psi.rate", psi.rate, "psi.offset", psi.offset,
-    "n", n, "n.zeros", n.zeros, "n.dex", n.dex, "n.tot", n.tot,
-    "ns.g", ns.g, "ns", ns,
-    "min.fc", min.fc, "max.fc", max.fc), ncol=2, byrow=TRUE)
-write.table(meta, file=paste0(subdir, "meta.txt"), quote=FALSE, row.names=FALSE, col.names=FALSE, sep="\t")
+#meta = matrix(c("p.ex", p.ex, "m.ex", m.ex, "sd.ex", sd.ex, "m.uex", m.uex, "sd.uex", sd.uex,
+#    "psi.shape", psi.shape, "psi.rate", psi.rate, "psi.offset", psi.offset,
+#    "n", n, "n.zeros", n.zeros, "n.dex", n.dex, 
+#    "ns.g", ns.g, 
+                                        #    "min.fc", min.fc, "max.fc", max.fc), ncol=2, byrow=TRUE)
+write.table(conf.data, file=paste0(subdir, "meta.txt"), quote=FALSE, row.names=TRUE, col.names=FALSE, sep="\t")
 
 ## Output row info
 row.info = cbind(log2mean=log2means, mean=means, psi=psis, log2FC=log2FC)

@@ -85,10 +85,10 @@ prog = "FDR2"
 range = 1:5000
 
 modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim") # 1 to 5
-modes = c(modes, paste0("d2notrim_pca1n", 1:5)) # 6 to 10
-modes = c(modes, paste0("d2notrim_sva", 1:5)) # 11 to 15
-modes = c(modes, paste0("edgeR_pca1n", 1:5)) # 16 to 20
-modes = c(modes, paste0("edgeR_sva", 1:5)) # 21 to 25
+## modes = c(modes, paste0("d2notrim_pca1n", 1:5)) # 6 to 10
+## modes = c(modes, paste0("d2notrim_sva", 1:5)) # 11 to 15
+## modes = c(modes, paste0("edgeR_pca1n", 1:5)) # 16 to 20
+## modes = c(modes, paste0("edgeR_sva", 1:5)) # 21 to 25
 # total modes = 25
 
 args = commandArgs(trailingOnly=TRUE)

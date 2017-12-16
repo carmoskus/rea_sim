@@ -25,8 +25,6 @@ coldata$Group = col.info$group
 dds = DESeqDataSetFromMatrix(countData=counts, colData=coldata, design = ~ Group)
 dds = DESeq(dds, minReplicatesForReplace=Inf)
 
-resultsNames(dds)
-
 # Output results
 res = results(dds, c('Group', 'a', 'b'), cooksCutoff=Inf)
 res = res[order(res$pvalue),]

@@ -29,7 +29,7 @@ fit = glmFit(y, mod)
 
 # Output data
 lrt = glmLRT(fit, coef=2)
-topTags(lrt, n=50)
+##topTags(lrt, n=50)
 write.csv(topTags(lrt, n=100000), file=paste0(subdir, name, "_res.csv"))
 
 #sfs = y$samples$lib.size / mean(y$samples$lib.size)

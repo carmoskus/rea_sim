@@ -23,8 +23,6 @@ coldata$Group = col.info$group
 dds = DESeqDataSetFromMatrix(countData=counts, colData=coldata, design = ~ Group)
 dds = DESeq(dds)
 
-resultsNames(dds)
-
 # Output results
 res = results(dds, c('Group', 'a', 'b'))
 res = res[order(res$pvalue),]

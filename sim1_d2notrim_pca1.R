@@ -1,11 +1,14 @@
 args = commandArgs(trailingOnly=TRUE)
-arg1 = args[1]
-arg2 = as.integer(args[2])
+arg.dir = args[1]
+arg.num = args[2]
 
-subdir = paste0("a/", arg1, "/")
-name = paste0("d2notrim_pca1n", arg2)
+if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) == 0) {
+    write("Usage: prog.R subdir num", stderr())
+    quit(save="no", status=1)
+}
 
-paste0(subdir, name)
+subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
+name = paste0("d2notrim_pca1n", n.pc)
 
 counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
 
@@ -23,8 +26,8 @@ coldata$Group = col.info$group
 
 # Add PCA covariates
 form = "Group"
-if (!is.na(arg2) & arg2 > 0) {
-    for (i in 1:arg2) {
+if (!is.na(n.pc) & n.pc > 0) {
+    for (i in 1:n.pc) {
         coldata[,paste0("Covar", i)] = pca[,i]
         form = paste0(form, " + Covar", i)
     }

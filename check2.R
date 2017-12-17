@@ -9,7 +9,7 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 th = c(0.01, 0.05, 0.20)
 
-checker = function (name, i) {
+checker = function (name) {
     de = read.csv(paste0("sims/", arg.dir, "/", arg.num, "/", name,"_res.csv"), row.names=1)
     nam = names(de)
     

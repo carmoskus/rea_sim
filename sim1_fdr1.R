@@ -97,10 +97,10 @@ range = 1:5000
 
 modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim")
 
-modes = c(modes, paste0("d2notrim_pca1n", 1:5))
-modes = c(modes, paste0("d2notrim_sva", 1:5))
-modes = c(modes, paste0("edgeR_pca1", 1:5))
-modes = c(modes, paste0("edgeR_sva", 1:5))
+## modes = c(modes, paste0("d2notrim_pca1n", 1:5))
+## modes = c(modes, paste0("d2notrim_sva", 1:5))
+## modes = c(modes, paste0("edgeR_pca1", 1:5))
+## modes = c(modes, paste0("edgeR_sva", 1:5))
 
 args = commandArgs(trailingOnly=TRUE)
 arg1 = as.integer(args[1])

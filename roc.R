@@ -1,19 +1,19 @@
 args = commandArgs(trailingOnly=TRUE)
 arg.dir = args[1]
 analysis = args[2]
-th = args[3]
-adj = args[4]
+adj = args[3]
 
 if (is.na(adj) || nchar(adj) == 0)
-    adj = "fdr"
+    adj = "un"
 
-if (is.na(arg.dir) || is.na(analysis) || is.na(th) || nchar(arg.dir) == 0 || nchar(analysis) == 0 || nchar(th) == 0) {
-    write("Usage: prog.R subdir analysis p-threshold", stderr())
+if (is.na(arg.dir) || is.na(analysis) || nchar(arg.dir) == 0 || nchar(analysis) == 0) {
+    write("Usage: prog.R subdir analysis adjustment", stderr())
     quit(save="no", status=1)
 }
 
+
 ## Function to calculate FDR in named run
-fdr = function (i) {
+roc = function (i) {
     ## Load data
     d = read.table(paste0("sims/", arg.dir, "/", i, "/check2.txt"), header=TRUE, sep="\t", row.names=1)
     if (! analysis %in% names(d)) {
@@ -24,18 +24,23 @@ fdr = function (i) {
     ## Pull out data we want
     a = d[[analysis]]
     names(a) = rownames(d)
-    n = a["n.dex.exp"]
-    sg = a[paste0("sde.", adj, th)]
-    sa = a[paste0("se.", adj, th)]
+    ne = a["n.all.exp"]
+    nde = a["n.dex.exp"]
+    nce = ne - nde
 
-    if (sa == 0) {
-        return(NA);
+    thresholds = grep(paste0("se.", adj), names(a), value=TRUE)
+    out = NULL
+    for (th in thresholds) {
+        se = a[th]
+        sde = a[sub("^se", "sde", th)]
+        sce = se - sde
+        fpr = sce / nce
+        tpr = sde / nde
+        out = rbind(out, c(fpr, tpr))
     }
-    sb = sa - sg
-    sb / sa
+    out
 }
 
-out = sapply(1:1000, fdr)
-write(out, paste0("sims/", arg.dir, "/", analysis, "_fdr", th, "_", adj, ".txt"), sep="\t", ncolumns=1)
-print(summary(out))
-##print(t.test(out, mu=as.numeric(th)))
+out = Reduce(rbind, lapply(1:1000, roc))
+colnames(out) = c("FPR", "TPR")
+write.table(out, file=paste0("sims/", arg.dir, "/", analysis, "_roc_", adj, ".txt"), sep="\t", row.names=FALSE, col.names=TRUE)

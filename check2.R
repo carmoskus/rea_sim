@@ -7,7 +7,7 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
     quit(save="no", status=1)
 }
 
-th = c(0.01, 0.05, 0.10, 0.20, 0.35, 0.5, 0.75, 0.95)
+th = c(0.01, 0.05, 0.10, 0.20, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.95, 0.99)
 
 checker = function (name) {
     de = read.csv(paste0("sims/", arg.dir, "/", arg.num, "/", name,"_res.csv"), row.names=1)

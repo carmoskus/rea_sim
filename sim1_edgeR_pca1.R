@@ -1,29 +1,31 @@
 args = commandArgs(trailingOnly=TRUE)
-arg1 = args[1]
-arg2 = as.integer(args[2])
+arg.dir = args[1]
+arg.num = args[2]
+n.pc = as.integer(args[3])
 
-subdir = paste0("b/", arg1, "/")
-name = paste0("edgeR_pca1n", arg2)
+if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) == 0 || is.na(n.pc) || n.pc <= 0) {
+    write("Usage: prog.R subdir num n.pcs", stderr())
+    quit(save="no", status=1)
+}
 
-paste0(subdir, name)
+subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
+name = paste0("edgeR_pca1n", n.pc)
 
 counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
 
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 
-# Load PCA
+## Load PCA
 pca = read.csv(paste0(subdir, "pca1_values.csv"), row.names=1)
 
-# Start edgeR
+## Start edgeR
 library("edgeR")
 
-# Build design string
+## Build design string
 form = "group"
-if (!is.na(arg2) & arg2 > 0) {
-    for (i in 1:arg2) {
-        col.info[,paste0("Covar", i)] = pca[,i]
-        form = paste0(form, " + Covar", i)
-    }
+for (i in 1:n.pc) {
+    col.info[,paste0("Covar", i)] = pca[,i]
+    form = paste0(form, " + Covar", i)
 }
 
 print(form)
@@ -39,7 +41,7 @@ fit = glmFit(y, mod)
 
 # Output data
 lrt = glmLRT(fit, coef=2)
-topTags(lrt, n=50)
+##topTags(lrt, n=50)
 write.csv(topTags(lrt, n=100000), file=paste0(subdir, name, "_res.csv"))
 
 #sfs = y$samples$lib.size / mean(y$samples$lib.size)

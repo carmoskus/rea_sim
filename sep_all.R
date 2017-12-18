@@ -69,7 +69,8 @@ sep.group = function (arg.num) {
 
 full = t(sapply(1:1000, sep.group))
 
-m = colMeans(full)
+m = colMeans(full, na.rm=TRUE)
+s = colSums(is.na(full))
 
 write.table(full, file=paste0("sims/", arg.dir, "/sep_all.txt"), row.names=FALSE, col.names=TRUE, sep="\t", quote=FALSE)
-write.table(m, file=paste0("sims/", arg.dir, "/sep_means.txt"), row.names=TRUE, col.names=FALSE, sep="\t", quote=FALSE)
+write.table(data.frame(m,s), file=paste0("sims/", arg.dir, "/sep_means.txt"), row.names=TRUE, col.names=FALSE, sep="\t", quote=FALSE)

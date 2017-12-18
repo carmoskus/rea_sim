@@ -1,9 +1,10 @@
 args = commandArgs(trailingOnly=TRUE)
 arg.dir = args[1]
 arg.num = args[2]
+n.pc = as.integer(args[3])
 
-if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) == 0) {
-    write("Usage: prog.R subdir num", stderr())
+if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) == 0 || is.na(n.pc) || n.pc <= 0) {
+    write("Usage: prog.R subdir num n.pcs", stderr())
     quit(save="no", status=1)
 }
 
@@ -14,23 +15,21 @@ counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t
 
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 
-# Load PCA
+## Load PCA
 pca = read.csv(paste0(subdir, "pca1_values.csv"), row.names=1)
 
-# Start DESeq2
+## Start DESeq2
 library("DESeq2")
 
 se = SummarizedExperiment(counts)
 coldata = colData(se)
 coldata$Group = col.info$group
 
-# Add PCA covariates
+## Add PCA covariates
 form = "Group"
-if (!is.na(n.pc) & n.pc > 0) {
-    for (i in 1:n.pc) {
-        coldata[,paste0("Covar", i)] = pca[,i]
-        form = paste0(form, " + Covar", i)
-    }
+for (i in 1:n.pc) {
+    coldata[,paste0("Covar", i)] = pca[,i]
+    form = paste0(form, " + Covar", i)
 }
 
 print(form)
@@ -39,12 +38,12 @@ dds = DESeq(dds, minReplicatesForReplace=Inf)
 
 resultsNames(dds)
 
-# Output results
+## Output results
 res = results(dds, c('Group', 'a', 'b'), cooksCutoff=Inf)
 res = res[order(res$pvalue),]
 write.csv(as.data.frame(res), file=paste0(subdir, name, "_res.csv"))
 
-write.csv(log2(counts(dds, normalized=TRUE)+1), file=paste0(subdir, name, "_log2counts.csv"))
+##write.csv(log2(counts(dds, normalized=TRUE)+1), file=paste0(subdir, name, "_log2counts.csv"))
 
 # Output metadata
 write.table(sizeFactors(dds), file=paste0(subdir, name, "_sizes.txt"), sep="\t")

@@ -9,7 +9,7 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
-name = "voom"
+name = "voom_quantile"
 
 counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
 
@@ -19,7 +19,7 @@ col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep=
 library(limma)
 
 design = model.matrix(~group, data=col.info)
-v = voom(counts, design)
+v = voom(counts, design, normalize.method="quantile")
 fit = lmFit(v, design)
 fit = eBayes(fit)
 

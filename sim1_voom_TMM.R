@@ -19,8 +19,12 @@ col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep=
 library(limma)
 library(edgeR)
 
+dge = DGEList(counts=counts)
+dge = calcNormFactors(dge)
+
 design = model.matrix(~group, data=col.info)
-v = voom(counts, design)
+
+v = voom(dge, design)
 fit = lmFit(v, design)
 fit = eBayes(fit)
 

@@ -46,6 +46,7 @@ psis = c(psis, rep(1, conf$n.zeros))
 
 ## Generate DEXness
 group = sample(rep(c("a","b"), conf$ns.g), ns)
+sizes = runif(ns, conf$size.min, conf$size.max)
 log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$n.dex, min=conf$min.fc, max=conf$max.fc), rep(0, conf$n.zeros))
 
 ## Group a is the base state
@@ -53,6 +54,10 @@ a = replicate(conf$ns.g, rnbinom(n.tot, mu=means, size=1/psis^2))
 
 ## Group b is altered
 b = replicate(conf$ns.g, rnbinom(n.tot, mu=means*2^log2FC, size=1/psis^2))
+
+## Alter group values by size factors
+a = t(round(t(a)*sizes[1:conf$ns.g]))
+b = t(round(t(b)*sizes[conf$ns.g + 1:conf$ns.g]))
 
 ## Put them back together
 x = matrix(0, nrow=n.tot, ncol=ns)
@@ -81,6 +86,8 @@ rownames(row.info) = rownames(x)
 write.table(row.info, file=paste0(subdir, "rows.txt"), quote=FALSE, sep="\t")
 
 ## Output col info
-col.info = cbind(group=group)
+col.info = data.frame(group=group, stringsAsFactors=FALSE)
+col.info[group == "a","size"] = sizes[1:conf$ns.g]
+col.info[group == "b","size"] = sizes[conf$ns.g + 1:conf$ns.g]
 rownames(col.info) = colnames(x)
 write.table(col.info, file=paste0(subdir, "cols.txt"), quote=FALSE, sep="\t")

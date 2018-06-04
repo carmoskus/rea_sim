@@ -27,6 +27,8 @@ if (!file.exists(conf.file)) {
 }
 
 conf.data = read.table(conf.file, sep="\t", stringsAsFactors=FALSE, row.names=1)
+conf.data = rbind(conf.data, mode=2)
+conf.data = rbind(conf.data, v=4)
 conf = as.list(conf.data$V2)
 names(conf) = rownames(conf.data)
 

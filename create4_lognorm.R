@@ -58,8 +58,11 @@ varlogs = log(vars/means^2+1)
 a = replicate(conf$ns.g, rlnorm(n.tot, meanlog=meanlogs, sdlog=sqrt(varlogs)))
 
 ## Group b is altered
-meanlogs2 = log(means*2^log2FC)-1/2*log(vars/(means*2^log2FC)^2+1)
-b = replicate(conf$ns.g, rlnorm(n.tot, meanlog=meanlogs2, sdlog=sqrt(varlogs)))
+meansb = means*2^log2FC
+varsb = meansb + (meansb*psis)^2
+meanlogsb = log(meansb)-1/2*log(varsb/meansb^2+1)
+varlogsb = log(varsb/meansb^2+1)
+b = replicate(conf$ns.g, rlnorm(n.tot, meanlog=meanlogsb, sdlog=sqrt(varlogsb)))
 
 ## Alter group values by size factors
 a = t(round(t(a)*sizes[1:conf$ns.g]))

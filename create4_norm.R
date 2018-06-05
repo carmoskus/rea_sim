@@ -55,7 +55,8 @@ log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$
 a = replicate(conf$ns.g, rnorm(n.tot, mean=means, sd=sqrt(means + (means*psis)^2)))
 
 ## Group b is altered
-b = replicate(conf$ns.g, rnorm(n.tot, mean=means*2^log2FC, sd=sqrt(means + (means*psis)^2)))
+meansb = means*2^log2FC
+b = replicate(conf$ns.g, rnorm(n.tot, mean=meansb, sd=sqrt(meansb + (meansb*psis)^2)))
 
 ## Alter group values by size factors
 a = t(round(t(a)*sizes[1:conf$ns.g]))

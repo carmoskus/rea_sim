@@ -52,11 +52,9 @@ sizes = runif(ns, conf$size.min, conf$size.max)
 log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$n.dex, min=conf$min.fc, max=conf$max.fc), rep(0, conf$n.zeros))
 
 ## Group a is the base state
-#a = replicate(conf$ns.g, rnbinom(n.tot, mu=means, size=1/psis^2))
 a = replicate(conf$ns.g, rnorm(n.tot, mean=means, sd=sqrt(means + (means*psis)^2)))
 
 ## Group b is altered
-#b = replicate(conf$ns.g, rnbinom(n.tot, mu=means*2^log2FC, size=1/psis^2))
 b = replicate(conf$ns.g, rnorm(n.tot, mean=means*2^log2FC, sd=sqrt(means + (means*psis)^2)))
 
 ## Alter group values by size factors
@@ -79,11 +77,6 @@ colnames(x) = paste0("S",1:ncol(x))
 write.table(x, file=paste0(subdir, "counts.txt"), quote=FALSE, sep="\t")
 
 ## Output meta information
-#meta = matrix(c("p.ex", p.ex, "m.ex", m.ex, "sd.ex", sd.ex, "m.uex", m.uex, "sd.uex", sd.uex,
-#    "psi.shape", psi.shape, "psi.rate", psi.rate, "psi.offset", psi.offset,
-#    "n", n, "n.zeros", n.zeros, "n.dex", n.dex, 
-#    "ns.g", ns.g, 
-                                        #    "min.fc", min.fc, "max.fc", max.fc), ncol=2, byrow=TRUE)
 write.table(conf.data, file=paste0(subdir, "meta.txt"), quote=FALSE, row.names=TRUE, col.names=FALSE, sep="\t")
 
 ## Output row info

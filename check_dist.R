@@ -16,6 +16,6 @@ col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep=
 means = rowMeans(counts)
 vars = apply(counts, 1, var)
 
-summary(log10(means[1:1000]+1))
+#summary(log10(means[1:1000]+1))
+summary(log10(vars[1:1000]+1))
 cat("\n")
-#summary(vars[1:1000])

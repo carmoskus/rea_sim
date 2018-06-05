@@ -42,7 +42,7 @@ psis = rgamma(nm, shape=conf$psi.shape, rate=conf$psi.rate)+conf$psi.offset
 
 ## Generate counts for 1 group at a time
 ns = conf$ns.g * 2
-means = c(2^log2means, rep(0, conf$n.zeros))
+means = c(2^log2means, rep(0.0000000001, conf$n.zeros))
 log2means = c(log2means, rep(NA, conf$n.zeros))
 psis = c(psis, rep(1, conf$n.zeros))
 
@@ -52,10 +52,14 @@ sizes = runif(ns, conf$size.min, conf$size.max)
 log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$n.dex, min=conf$min.fc, max=conf$max.fc), rep(0, conf$n.zeros))
 
 ## Group a is the base state
-a = replicate(conf$ns.g, rlnorm(n.tot, meanlog=means, sdlog=sqrt(means + (means*psis)^2)))
+vars = means + (means*psis)^2
+meanlogs = log(means)-1/2*log(vars/means^2+1)
+varlogs = log(vars/means^2+1)
+a = replicate(conf$ns.g, rlnorm(n.tot, meanlog=meanlogs, sdlog=sqrt(varlogs)))
 
 ## Group b is altered
-b = replicate(conf$ns.g, rlnorm(n.tot, meanlog=means*2^log2FC, sdlog=sqrt(means + (means*psis)^2)))
+meanlogs2 = log(means*2^log2FC)-1/2*log(vars/(means*2^log2FC)^2+1)
+b = replicate(conf$ns.g, rlnorm(n.tot, meanlog=meanlogs2, sdlog=sqrt(varlogs)))
 
 ## Alter group values by size factors
 a = t(round(t(a)*sizes[1:conf$ns.g]))

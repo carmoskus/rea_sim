@@ -9,28 +9,13 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
-name = "ttest_none"
-
 counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
 
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 
-# Normalize to total reads
-#num.reads = colSums(counts)
-#sfs = num.reads / mean(num.reads)
-#counts = t(t(counts) / sfs)
+means = rowMeans(counts)
+vars = apply(counts, 1, var)
 
-# Do t-tests
-test = function (row) {
-    r = t.test(row ~ col.info$group)
-    x = c(mean=mean(row), log2FC=r$estimate[2]-r$estimate[1], t=r$statistic, df=r$parameter, p.value=r$p.value)
-    names(x) = c("mean", "log2FC", "t", "df", "p.value")
-    x
-}
-res = as.data.frame(t(apply(counts, 1, test)))
-
-res = res[order(res$p.value),]
-
-# Output
-write.csv(res, file=paste0(subdir, name, "_res.csv"))
-
+summary(log10(means[1:1000]+1))
+cat("\n")
+#summary(vars[1:1000])

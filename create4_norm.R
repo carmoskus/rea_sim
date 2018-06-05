@@ -77,11 +77,6 @@ colnames(x) = paste0("S",1:ncol(x))
 write.table(x, file=paste0(subdir, "counts.txt"), quote=FALSE, sep="\t")
 
 ## Output meta information
-#meta = matrix(c("p.ex", p.ex, "m.ex", m.ex, "sd.ex", sd.ex, "m.uex", m.uex, "sd.uex", sd.uex,
-#    "psi.shape", psi.shape, "psi.rate", psi.rate, "psi.offset", psi.offset,
-#    "n", n, "n.zeros", n.zeros, "n.dex", n.dex, 
-#    "ns.g", ns.g, 
-                                        #    "min.fc", min.fc, "max.fc", max.fc), ncol=2, byrow=TRUE)
 write.table(conf.data, file=paste0(subdir, "meta.txt"), quote=FALSE, row.names=TRUE, col.names=FALSE, sep="\t")
 
 ## Output row info

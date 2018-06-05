@@ -35,5 +35,4 @@ res = as.data.frame(t(apply(counts, 1, test)))
 res = res[order(res$p.value),]
 
 ## Output
-write.csv(res, file=paste0(subdir, "ttest_res.csv"))
-
+write.csv(res, file=paste0(subdir, name, "_res.csv"))

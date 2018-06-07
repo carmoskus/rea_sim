@@ -28,7 +28,7 @@ if (!file.exists(conf.file)) {
 
 conf.data = read.table(conf.file, sep="\t", stringsAsFactors=FALSE, row.names=1)
 conf.data = rbind(conf.data, mode=1)
-conf.data = rbind(conf.data, v=4)
+conf.data = rbind(conf.data, v=5)
 conf = as.list(conf.data$V2)
 names(conf) = rownames(conf.data)
 
@@ -51,15 +51,15 @@ group = sample(rep(c("a","b"), conf$ns.g), ns)
 sizes = runif(ns, conf$size.min, conf$size.max)
 log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$n.dex, min=conf$min.fc, max=conf$max.fc), rep(0, conf$n.zeros))
 
+## Generate means incorporating size factors
+meansA = matrix(means, nrow=length(means)) %*% sizes[1:conf$ns.g]
+meansB = matrix(means*2^log2FC, nrow=length(means)) * sizes[conf$ns.g + 1:conf$ns.g]
+
 ## Group a is the base state
-a = replicate(conf$ns.g, rnbinom(n.tot, mu=means, size=1/psis^2))
+a = matrix(rnbinom(conf$ns.g * length(means), mu=meansA, size=1/psis^2), nrow=length(means))
 
 ## Group b is altered
-b = replicate(conf$ns.g, rnbinom(n.tot, mu=means*2^log2FC, size=1/psis^2))
-
-## Alter group values by size factors
-a = t(round(t(a)*sizes[1:conf$ns.g]))
-b = t(round(t(b)*sizes[conf$ns.g + 1:conf$ns.g]))
+b = matrix(rnbinom(conf$ns.g * length(means), mu=meansB, size=1/psis^2), nrow=length(means))
 
 ## Put them back together
 x = matrix(0, nrow=n.tot, ncol=ns)

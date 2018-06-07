@@ -68,9 +68,9 @@ varlogsB = log(varsB/meansB^2+1)
 b = matrix(rlnorm(conf$ns.g * length(means), meanlog=meanlogsB, sdlog=sqrt(varlogsB)), nrow=length(means))
 
 ## Alter group values by size factors
-a = t(round(t(a)*sizes[1:conf$ns.g]))
+a = round(a)
 a[a < 0] = 0
-b = t(round(t(b)*sizes[conf$ns.g + 1:conf$ns.g]))
+b = round(b)
 b[b < 0] = 0
 
 ## Put them back together

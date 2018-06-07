@@ -53,7 +53,7 @@ log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$
 
 ## Generate means incorporating size factors
 meansA = matrix(means, nrow=length(means)) %*% sizes[1:conf$ns.g]
-meansB = matrix(means*2^log2FC, nrow=length(means)) * sizes[conf$ns.g + 1:conf$ns.g]
+meansB = matrix(means*2^log2FC, nrow=length(means)) %*% sizes[conf$ns.g + 1:conf$ns.g]
 
 ## Group a is the base state
 a = matrix(rnbinom(conf$ns.g * length(means), mu=meansA, size=1/psis^2), nrow=length(means))

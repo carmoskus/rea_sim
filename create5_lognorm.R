@@ -28,7 +28,7 @@ if (!file.exists(conf.file)) {
 
 conf.data = read.table(conf.file, sep="\t", stringsAsFactors=FALSE, row.names=1)
 conf.data = rbind(conf.data, mode=3)
-conf.data = rbind(conf.data, v=4)
+conf.data = rbind(conf.data, v=5)
 conf = as.list(conf.data$V2)
 names(conf) = rownames(conf.data)
 
@@ -51,18 +51,21 @@ group = sample(rep(c("a","b"), conf$ns.g), ns)
 sizes = runif(ns, conf$size.min, conf$size.max)
 log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$n.dex, min=conf$min.fc, max=conf$max.fc), rep(0, conf$n.zeros))
 
+## Generate means incorporating size factors
+meansA = matrix(means, nrow=length(means)) %*% sizes[1:conf$ns.g]
+meansB = matrix(means*2^log2FC, nrow=length(means)) %*% sizes[conf$ns.g + 1:conf$ns.g]
+
 ## Group a is the base state
-vars = means + (means*psis)^2
-meanlogs = log(means)-1/2*log(vars/means^2+1)
-varlogs = log(vars/means^2+1)
-a = replicate(conf$ns.g, rlnorm(n.tot, meanlog=meanlogs, sdlog=sqrt(varlogs)))
+varsA = meansA + (meansA*psis)^2
+meanlogsA = log(meansA)-1/2*log(varsA/meansA^2+1)
+varlogsA = log(varsA/meansA^2+1)
+a = matrix(rlnorm(conf$ns.g * length(means), meanlog=meanlogsA, sdlog=sqrt(varlogsA)), nrow=length(means))
 
 ## Group b is altered
-meansb = means*2^log2FC
-varsb = meansb + (meansb*psis)^2
-meanlogsb = log(meansb)-1/2*log(varsb/meansb^2+1)
-varlogsb = log(varsb/meansb^2+1)
-b = replicate(conf$ns.g, rlnorm(n.tot, meanlog=meanlogsb, sdlog=sqrt(varlogsb)))
+varsB = meansB + (meansB*psis)^2
+meanlogsB = log(meansB)-1/2*log(varsB/meansB^2+1)
+varlogsB = log(varsB/meansB^2+1)
+b = matrix(rlnorm(conf$ns.g * length(means), meanlog=meanlogsB, sdlog=sqrt(varlogsB)), nrow=length(means))
 
 ## Alter group values by size factors
 a = t(round(t(a)*sizes[1:conf$ns.g]))

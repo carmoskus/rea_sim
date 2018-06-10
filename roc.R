@@ -13,7 +13,7 @@ if (is.na(arg.dir) || is.na(analysis) || nchar(arg.dir) == 0 || nchar(analysis) 
 
 
 ## Function to calculate FDR in named run
-roc = function (i) {
+roc.exp = function (i) {
     ## Load data
     d = read.table(paste0("sims/", arg.dir, "/", i, "/check2.txt"), header=TRUE, sep="\t", row.names=1)
     if (! analysis %in% names(d)) {
@@ -41,6 +41,34 @@ roc = function (i) {
     out
 }
 
-out = Reduce(rbind, lapply(1:1000, roc))
+roc.all = function (i) {
+    ## Load data
+    d = read.table(paste0("sims/", arg.dir, "/", i, "/check2.txt"), header=TRUE, sep="\t", row.names=1)
+    if (! analysis %in% names(d)) {
+        write(paste0("Could not find analysis '", analysis, "'"), stderr())
+        quit(save="no", status=1)
+    }
+
+    ## Pull out data we want
+    a = d[[analysis]]
+    names(a) = rownames(d)
+    ne = a["n.nonzero"]
+    nde = a["n.dex.nonzero"]
+    nce = ne - nde
+
+    thresholds = grep(paste0("s.", adj), names(a), value=TRUE)
+    out = NULL
+    for (th in thresholds) {
+        se = a[th]
+        sde = a[sub("^s", "sd", th)]
+        sce = se - sde
+        fpr = sce / nce
+        tpr = sde / nde
+        out = rbind(out, c(fpr, tpr))
+    }
+    out
+}
+
+out = Reduce(rbind, lapply(1:1000, roc.all))
 colnames(out) = c("FPR", "TPR")
 write.table(out, file=paste0("sims/", arg.dir, "/", analysis, "_roc_", adj, ".txt"), sep="\t", row.names=FALSE, col.names=TRUE)

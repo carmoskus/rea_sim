@@ -46,14 +46,17 @@ checker = function (name) {
     rows = read.table(paste0("sims/", arg.dir, "/", arg.num, "/rows.txt"), row.names=1)
     dex.genes = rownames(rows)[rows$log2FC != 0]
     dex.exp = intersect(dex.genes, rownames(de)[expressed])
-
+    nonzero.genes = rownames(rows)[rows$mean != 0]
+    
     dex.ind = rownames(de) %in% dex.genes
     
     ## Start generating output
     n.dex = length(dex.genes)
     n.dex.exp = length(dex.exp)
+    n.nonzero = length(nonzero.genes)
+    n.dex.nonzero = length(intersect(dex.genes, nonzero.genes))
     ## out = list(n.exp=n.exp, dex.exp=n.dex.exp)
-    out = c(n.all.exp=n.exp, n.dex.exp=n.dex.exp)
+    out = c(n.all.exp=n.exp, n.nonzero=n.nonzero, n.dex.exp=n.dex.exp, n.dex=n.dex, n.dex.nonzero=n.dex.nonzero)
 
     ## Generate output by threshold for 1 analysis
     for (t in th) {

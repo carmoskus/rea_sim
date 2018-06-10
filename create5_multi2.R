@@ -28,7 +28,7 @@ if (!file.exists(conf.file)) {
 
 conf.data = read.table(conf.file, sep="\t", stringsAsFactors=FALSE, row.names=1)
 conf.data = rbind(conf.data, mode=5)
-conf.data = rbind(conf.data, v=4)
+conf.data = rbind(conf.data, v=5)
 conf = as.list(conf.data$V2)
 names(conf) = rownames(conf.data)
 
@@ -51,13 +51,21 @@ group = sample(rep(c("a","b"), conf$ns.g), ns)
 sizes = runif(ns, conf$size.min, conf$size.max)
 log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$n.dex, min=conf$min.fc, max=conf$max.fc), rep(0, conf$n.zeros))
 
+## Generate means incorporating biological variance
+#meansA = matrix(means, nrow=length(means)) %*% sizes[1:conf$ns.g]
+#meansB = matrix(means*2^log2FC, nrow=length(means)) %*% sizes[conf$ns.g + 1:conf$ns.g]
+shapes = 1/psis^2
+ps = means / (means + shapes)
+rates = (1-ps) / ps
+meansA = matrix(rgamma(length(means)*conf$ns.g, shape=shapes, rate=rates), nrow=length(means))
+meansB = matrix(rgamma(length(means)*conf$ns.g, shape=shapes, rate=rates)*2^log2FC, nrow=length(means))
+
 ## Group a is the base state
 num.reads = 2.5e6
-a = sapply(num.reads*sizes[1:conf$ns.g], function (n) rmultinom(1, n, c(means, sum(means)*0.4))[1:length(means),])
+a = sapply(1:conf$ns.g, function (i) rmultinom(1, num.reads*sizes[i], c(meansA[,i], sum(meansA[,i])*0.4))[1:length(means),])
 
 ## Group b is altered
-meansb = means*2^log2FC
-b = sapply(num.reads*sizes[conf$ns.g + 1:conf$ns.g], function (n) rmultinom(1, n, c(meansb, sum(means)*0.4))[1:length(means),])
+b = sapply(conf$ns.g + 1:conf$ns.g, function (i) rmultinom(1, num.reads*sizes[i], c(meansB[,i-conf$ns.g], sum(meansB[,i-conf$ns.g])*0.4))[1:length(means),])
 
 ## Put them back together
 x = matrix(0, nrow=n.tot, ncol=ns)

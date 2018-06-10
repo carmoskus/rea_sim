@@ -36,20 +36,23 @@ checker = function (name) {
     n.exp = sum(expressed, na.rm=TRUE)
     n.all = nrow(de)
 
-    ## Calc adjusted pvals
-    exp.fdr = p.adjust(exp, method="BH")
-    all.fdr = p.adjust(all, method="BH")
-    exp.bon = p.adjust(exp, method="bonferroni")
-    all.bon = p.adjust(all, method="bonferroni")
-
     ## Load metadata showing which genes had effects induced
     rows = read.table(paste0("sims/", arg.dir, "/", arg.num, "/rows.txt"), row.names=1)
     dex.genes = rownames(rows)[rows$log2FC != 0]
     dex.exp = intersect(dex.genes, rownames(de)[expressed])
     nonzero.genes = rownames(rows)[rows$mean != 0]
     
-    dex.ind = rownames(de) %in% dex.genes
+    dex.ind = rownames(de)[rownames(de) %in% nonzero.genes] %in% dex.genes
+
+    ## Remove mean=zero genes from all
+    all = all[rownames(de) %in% nonzero.genes]
     
+    ## Calc adjusted pvals
+    exp.fdr = p.adjust(exp, method="BH")
+    all.fdr = p.adjust(all, method="BH")
+    exp.bon = p.adjust(exp, method="bonferroni")
+    all.bon = p.adjust(all, method="bonferroni")
+
     ## Start generating output
     n.dex = length(dex.genes)
     n.dex.exp = length(dex.exp)

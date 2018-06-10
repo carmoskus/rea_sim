@@ -11,7 +11,15 @@ subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
 name = "deseq2_notrim"
 
-counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
+countsN = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
+
+## Convert counts to integer mode manually so I can fix overflows
+counts = as.integer(countsN)
+counts[is.na(counts)] = .Machine$integer.max
+dim(counts) = dim(countsN)
+rownames(counts) = rownames(countsN)
+colnames(counts) = colnames(countsN)
+rm(countsN)
 
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 

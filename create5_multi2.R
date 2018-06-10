@@ -52,8 +52,6 @@ sizes = runif(ns, conf$size.min, conf$size.max)
 log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$n.dex, min=conf$min.fc, max=conf$max.fc), rep(0, conf$n.zeros))
 
 ## Generate means incorporating biological variance
-#meansA = matrix(means, nrow=length(means)) %*% sizes[1:conf$ns.g]
-#meansB = matrix(means*2^log2FC, nrow=length(means)) %*% sizes[conf$ns.g + 1:conf$ns.g]
 shapes = 1/psis^2
 ps = means / (means + shapes)
 rates = (1-ps) / ps

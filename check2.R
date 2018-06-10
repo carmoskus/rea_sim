@@ -16,37 +16,36 @@ checker = function (name) {
     if ("logCPM" %in% nam) {
         ## edgeR
         all = de$PValue
-        expressed = de$logCPM > log2(3.5+2)
     } else if ("lfcSE" %in% nam) {
         ## DESeq2
         all = de$pvalue
-        expressed = de$baseMean > 3.5
     } else if ("mean" %in% nam) {
         ## t-test
         all = de$p.value
-        expressed = de$mean > 3.5
     } else {
         ## Other = voom
         all = de$p.value
-        expressed = de$baseMean > log2(3.5+0.505)
     }
-    exp = all
-    exp[is.na(expressed) | ! expressed] = NA
     
-    n.exp = sum(expressed, na.rm=TRUE)
-    n.all = nrow(de)
-
     ## Load metadata showing which genes had effects induced
     rows = read.table(paste0("sims/", arg.dir, "/", arg.num, "/rows.txt"), row.names=1)
     dex.genes = rownames(rows)[rows$log2FC != 0]
-    dex.exp = intersect(dex.genes, rownames(de)[expressed])
-    nonzero.genes = rownames(rows)[rows$mean != 0]
+    nonzero.genes = rownames(rows)[!is.na(rows$mean) & rows$mean != 0]
+    exp.genes = rownames(rows)[!is.na(rows$mean) & rows$mean >= 3.5]
     
     dex.ind = rownames(de)[rownames(de) %in% nonzero.genes] %in% dex.genes
 
     ## Remove mean=zero genes from all
     all = all[rownames(de) %in% nonzero.genes]
     
+    ## Setup list of expressed pvalues
+    expressed = rownames(de)[rownames(de) %in% nonzero.genes] %in% exp.genes
+    n.exp = sum(expressed, na.rm=TRUE)
+    n.all = nrow(de)
+    exp = all
+    exp[is.na(expressed) | ! expressed] = NA
+    dex.exp = intersect(dex.genes, exp.genes)
+
     ## Calc adjusted pvals
     exp.fdr = p.adjust(exp, method="BH")
     all.fdr = p.adjust(all, method="BH")
@@ -58,7 +57,7 @@ checker = function (name) {
     n.dex.exp = length(dex.exp)
     n.nonzero = length(nonzero.genes)
     n.dex.nonzero = length(intersect(dex.genes, nonzero.genes))
-    ## out = list(n.exp=n.exp, dex.exp=n.dex.exp)
+    
     out = c(n.all.exp=n.exp, n.nonzero=n.nonzero, n.dex.exp=n.dex.exp, n.dex=n.dex, n.dex.nonzero=n.dex.nonzero)
 
     ## Generate output by threshold for 1 analysis

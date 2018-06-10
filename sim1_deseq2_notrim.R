@@ -26,7 +26,7 @@ dds = DESeqDataSetFromMatrix(countData=counts, colData=coldata, design = ~ Group
 dds = DESeq(dds, minReplicatesForReplace=Inf)
 
 # Output results
-res = results(dds, c('Group', 'a', 'b'), cooksCutoff=Inf)
+res = results(dds, c('Group', 'b', 'a'), cooksCutoff=Inf)
 res = res[order(res$pvalue),]
 write.csv(as.data.frame(res), file=paste0(subdir, name, "_res.csv"))
 

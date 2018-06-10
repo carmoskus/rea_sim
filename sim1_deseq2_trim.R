@@ -24,7 +24,7 @@ dds = DESeqDataSetFromMatrix(countData=counts, colData=coldata, design = ~ Group
 dds = DESeq(dds)
 
 # Output results
-res = results(dds, c('Group', 'a', 'b'))
+res = results(dds, c('Group', 'b', 'a'))
 res = res[order(res$pvalue),]
 write.csv(as.data.frame(res), file=paste0(subdir, "deseq2_res.csv"))
 

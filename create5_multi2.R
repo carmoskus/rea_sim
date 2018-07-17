@@ -54,7 +54,7 @@ log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$
 ## Generate means incorporating biological variance
 shapes = 1/psis^2
 ps = means / (means + shapes)
-rates = (1-ps) / ps
+rates = (1-ps) / ps # = 1/ps - 1 = (means + shapes) / means - 1 = shapes / means = 1 / (means*psis^2)
 meansA = matrix(rgamma(length(means)*conf$ns.g, shape=shapes, rate=rates), nrow=length(means))
 meansB = matrix(rgamma(length(means)*conf$ns.g, shape=shapes, rate=rates)*2^log2FC, nrow=length(means))
 

@@ -2,7 +2,7 @@ args = commandArgs(trailingOnly=TRUE)
 arg.dir = args[1]
 
 if (is.na(arg.dir) || nchar(arg.dir) == 0) {
-    write("Usage: prog.R subdir analysis", stderr())
+    write("Usage: prog.R subdir", stderr())
     quit(save="no", status=1)
 }
 
@@ -17,9 +17,9 @@ check = function (i) {
     rows = rows[rows$log2FC != 0,]
 
     ## Load analyses
-    for (i in 1:nrow(analyses)) {
-        analysis = analyses$name[i]
-        col = analyses$col[i]
+    for (j in 1:nrow(analyses)) {
+        analysis = analyses$name[j]
+        col = analyses$col[j]
 
         d = read.csv(paste0("sims/", arg.dir, "/", i, "/", analysis, "_res.csv"), row.names=1)
         d = d[rownames(rows),]

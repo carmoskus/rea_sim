@@ -28,7 +28,7 @@ if (!file.exists(conf.file)) {
 
 conf.data = read.table(conf.file, sep="\t", stringsAsFactors=FALSE, row.names=1)
 conf.data = rbind(conf.data, mode=1)
-conf.data = rbind(conf.data, v=5)
+conf.data = rbind(conf.data, v=6)
 conf = as.list(conf.data$V2)
 names(conf) = rownames(conf.data)
 
@@ -55,11 +55,14 @@ log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$
 meansA = matrix(means, nrow=length(means)) %*% sizes[1:conf$ns.g]
 meansB = matrix(means*2^log2FC, nrow=length(means)) %*% sizes[conf$ns.g + 1:conf$ns.g]
 
+## Number of technical replicates
+num.tech = conf$num.tech
+
 ## Group a is the base state
-a = matrix(rnbinom(conf$ns.g * length(means), mu=meansA, size=1/psis^2), nrow=length(means))
+a = Reduce('+', replicate(num.tech, matrix(rnbinom(conf$ns.g * length(means), mu=meansA, size=1/psis^2), nrow=length(means)), simplify=FALSE))
 
 ## Group b is altered
-b = matrix(rnbinom(conf$ns.g * length(means), mu=meansB, size=1/psis^2), nrow=length(means))
+b = Reduce('+', replicate(num.tech, matrix(rnbinom(conf$ns.g * length(means), mu=meansB, size=1/psis^2), nrow=length(means)), simplify=FALSE))
 
 ## Put them back together
 x = matrix(0, nrow=n.tot, ncol=ns)

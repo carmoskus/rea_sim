@@ -28,7 +28,7 @@ if (!file.exists(conf.file)) {
 
 conf.data = read.table(conf.file, sep="\t", stringsAsFactors=FALSE, row.names=1)
 conf.data = rbind(conf.data, mode=3)
-conf.data = rbind(conf.data, v=6)
+conf.data = rbind(conf.data, v=7)
 conf = as.list(conf.data$V2)
 names(conf) = rownames(conf.data)
 
@@ -59,12 +59,14 @@ meansB = matrix(means*2^log2FC, nrow=length(means)) %*% sizes[conf$ns.g + 1:conf
 num.tech = conf$num.tech
 
 ## Group a is the base state
+meansA = meansA / num.tech
 varsA = meansA + (meansA*psis)^2
 meanlogsA = log(meansA)-1/2*log(varsA/meansA^2+1)
 varlogsA = log(varsA/meansA^2+1)
 a = Reduce('+', replicate(num.tech, matrix(rlnorm(conf$ns.g * length(means), meanlog=meanlogsA, sdlog=sqrt(varlogsA)), nrow=length(means)), simplify=FALSE))
 
 ## Group b is altered
+meansB = meansB / num.tech
 varsB = meansB + (meansB*psis)^2
 meanlogsB = log(meansB)-1/2*log(varsB/meansB^2+1)
 varlogsB = log(varsB/meansB^2+1)

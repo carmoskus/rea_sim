@@ -51,18 +51,22 @@ group = sample(rep(c("a","b"), conf$ns.g), ns)
 sizes = runif(ns, conf$size.min, conf$size.max)
 log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$n.dex, min=conf$min.fc, max=conf$max.fc), rep(0, conf$n.zeros))
 
-## Generate means incorporating size factors
-meansA = matrix(means, nrow=length(means)) %*% sizes[1:conf$ns.g]
-meansB = matrix(means*2^log2FC, nrow=length(means)) %*% sizes[conf$ns.g + 1:conf$ns.g]
+## Generate means incorporating biological variation
+meansA = matrix(rgamma(conf$ns.g * length(means), shape=1/psis^2, rate=1/(means*psis^2)), nrow=length(means)) # An M * n matrix with the means in each sample
+meansB = matrix(rgamma(conf$ns.g * length(means), shape=1/psis^2, rate=1/(means*2^log2FC*psis^2)), nrow=length(means)) # An M * n matrix with the means in each sample
 
-## Number of technical replicates
+## Adjust means based on size factors
+meansA = t(apply(meansA, 1, function (r) r*sizes[1:conf$ns.g])) # An M * n matrix with the mean in each sample adjusted by size factor
+meansB = t(apply(meansB, 1, function (r) r*sizes[conf$ns.g + 1:conf$ns.g])) # An M * n matrix with the mean in each sample adjusted by size factor
+
+## Number of technical replicates - WARNING: not using this yet
 num.tech = conf$num.tech
 
 ## Group a is the base state
-a = matrix(rnbinom(conf$ns.g * length(means), mu=meansA, size=1/psis^2), nrow=length(means))
+a = matrix(rpois(conf$ns.g * length(means), lambda=meansA), nrow=length(means))
 
 ## Group b is altered
-b = matrix(rnbinom(conf$ns.g * length(means), mu=meansB, size=1/psis^2), nrow=length(means))
+b = matrix(rpois(conf$ns.g * length(means), lambda=meansB), nrow=length(means))
 
 ## Put them back together
 x = matrix(0, nrow=n.tot, ncol=ns)

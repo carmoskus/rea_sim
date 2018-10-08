@@ -63,10 +63,10 @@ meansB = t(apply(meansB, 1, function (r) r*sizes[conf$ns.g + 1:conf$ns.g])) # An
 num.tech = conf$num.tech
 
 ## Group a is the base state
-a = matrix(rpois(conf$ns.g * length(means), lambda=meansA), nrow=length(means))
+a = Reduce('+', replicate(num.tech, matrix(rpois(conf$ns.g * length(means), lambda=meansA), nrow=length(means)), simplify=FALSE))
 
 ## Group b is altered
-b = matrix(rpois(conf$ns.g * length(means), lambda=meansB), nrow=length(means))
+b = Reduce('+', replicate(num.tech, matrix(rpois(conf$ns.g * length(means), lambda=meansB), nrow=length(means)), simplify=FALSE))
 
 ## Put them back together
 x = matrix(0, nrow=n.tot, ncol=ns)

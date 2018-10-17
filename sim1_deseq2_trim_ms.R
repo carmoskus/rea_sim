@@ -9,7 +9,12 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
+name = "deseq2_trim_ms"
+
 counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
+
+num.reads = colSums(counts)
+sfs = num.reads / mean(num.reads)
 
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 
@@ -21,19 +26,20 @@ coldata = colData(se)
 coldata$Group = col.info$group
 
 dds = DESeqDataSetFromMatrix(countData=counts, colData=coldata, design = ~ Group)
+sizeFactors(dds) = sfs
 dds = DESeq(dds)
 
 # Output results
 res = results(dds, c('Group', 'b', 'a'))
 res = res[order(res$pvalue),]
-write.csv(as.data.frame(res), file=paste0(subdir, "deseq2_res.csv"))
+write.csv(as.data.frame(res), file=paste0(subdir, name, "_res.csv"))
 
-write.csv(log2(counts(dds, normalized=TRUE)+1), file=paste0(subdir,"deseq2_log2counts.csv"))
+write.csv(log2(counts(dds, normalized=TRUE)+1), file=paste0(subdir, name, "_log2counts.csv"))
 
 # Output metadata
-write.table(sizeFactors(dds), file=paste0(subdir, "deseq2_sizes.txt"), sep="\t")
+write.table(sizeFactors(dds), file=paste0(subdir, name, "_sizes.txt"), sep="\t")
 
 mc = as.data.frame(mcols(dds))
 rownames(mc) = rownames(dds)
-write.table(mc, file=paste0(subdir, "deseq2_meta.txt"), sep="\t")
+write.table(mc, file=paste0(subdir, name, "_meta.txt"), sep="\t")
 

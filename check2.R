@@ -102,7 +102,12 @@ checker = function (name) {
 }
 
 #modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim", "voom_quantile", "voom_TMM", "ttest_none", "deseq2_ns", "ttest_log")
-modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim", "voom_quantile", "voom_TMM", "ttest_log")
+#modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim", "voom_quantile", "voom_TMM", "ttest_log")
+modes = c("deseq2", "deseq2_ns", "deseq2_trim_ms",
+          "deseq2_notrim", "deseq2_notrim_ms", "deseq2_notrim_ns",
+          "edgeR",
+          "voom", "voom_quantile", "voom_TMM",
+          "ttest", "ttest_none", "ttest_log", "ttest_log_ns")
 
 out = sapply(modes, checker)
 write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check2.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)

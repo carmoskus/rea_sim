@@ -106,7 +106,7 @@ checker = function (name) {
 modes = c("deseq2", "deseq2_ns", "deseq2_trim_ms",
           "deseq2_notrim", "deseq2_notrim_ms", "deseq2_notrim_ns",
           "edgeR",
-          "voom", "voom_quantile", "voom_TMM",
+          "voom", "voom_ns", "voom_quantile", "voom_TMM",
           "ttest", "ttest_none",
           "ttest_log", "ttest_log_ns", "ttest_log_TMM")
 

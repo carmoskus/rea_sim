@@ -108,7 +108,8 @@ modes = c("deseq2", "deseq2_ns", "deseq2_trim_ms",
           "edgeR",
           "voom", "voom_ns", "voom_quantile", "voom_TMM",
           "ttest", "ttest_none",
-          "ttest_log", "ttest_log_ns", "ttest_log_TMM")
+          "ttest_log", "ttest_log_ns", "ttest_log_TMM",
+          "ttest_vscale", "ttest_vnone", "ttest_vquantile")
 
 out = sapply(modes, checker)
 write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check2.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)

@@ -30,6 +30,9 @@ design = model.matrix(~group, data=col.info)
 # Use voom to quantile normalize and transform
 v = voom(dge, design, normalize.method="quantile")
 
+vars.E = apply(v$E, 1, var)
+E = v$E[vars.E > 0,]
+
 ## Do t-tests
 test = function (row) {
     r = t.test(row ~ col.info$group)
@@ -37,7 +40,7 @@ test = function (row) {
     names(x) = c("mean", "log2FC", "t", "df", "p.value")
     x
 }
-res = as.data.frame(t(apply(v$E, 1, test)))
+res = as.data.frame(t(apply(E, 1, test)))
 
 res = res[order(res$p.value),]
 

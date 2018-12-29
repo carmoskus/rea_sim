@@ -16,8 +16,6 @@ counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 
 ## Normalize by TMM
-#num.reads = colSums(counts)
-#sfs = num.reads / mean(num.reads)
 library(limma)
 library(edgeR)
 
@@ -31,6 +29,8 @@ counts = t(t(counts) / sfs)
 
 ## Log-transform counts
 counts = log2(counts + 1)
+## Voom-transform counts
+#counts =  t(log2(t(counts + 0.5)/(eff.lib.sizes + 1) * 1e+06))
 
 design = model.matrix(~group, data=col.info)
 

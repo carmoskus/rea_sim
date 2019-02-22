@@ -45,7 +45,7 @@ permute = function (analysis) {
         d = c(a.d, b.d)
         df = data.frame(group = ifelse(rownames(col.info) %in% d, "d", "r"))
         rownames(df) = rownames(col.info)
-        filename = paste0(subdir, "ph1a_", i, ".txt") 
+        filename = paste0(subdir, name, "_", i, ".txt") 
         write.table(df, file=filename)
         
         ## Run analysis on discovery samples
@@ -60,7 +60,8 @@ permute = function (analysis) {
 }
 
 ## Run the cross-validation metric on N permutations
-N = 4
-analyses = c("deseq2_notrim", "edgeR", "voom_TMM", "voom", "t-test")
+N = 20
+## "deseq2_notrim" "edgeR" "voom_TMM" "voom" "ttest_log_TMM" "ttest_log"
+analyses = c("deseq2_notrim", "edgeR", "voom_TMM", "voom", "ttest_log_TMM", "ttest_log")
 
-x=sapply(sapply(analyses, permute), function (f) sapply(1:N, f))
+x = sapply(sapply(analyses, permute), function (f) sapply(1:N, f))

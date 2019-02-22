@@ -9,7 +9,7 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
-name = paste0("deseq2_notrim_", args[3], "_", args[4])
+name = paste0("deseq2_notrim_", args[3], "_", args[4], "_", args[5])
 
 countsN = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
 
@@ -23,14 +23,13 @@ rm(countsN)
 
 col.info = read.table(paste0(subdir, args[3], "_", args[4], ".txt"), header=TRUE, row.names=1, sep="\t")
 
-# Start DESeq2
-library("DESeq2")
-
 ## Subset the samples
 counts = counts[, col.info$subset == args[5]]
 col.info = col.info[col.info$subset == args[5],]
 
-## Start analysis
+# Start DESeq2
+library("DESeq2")
+
 se = SummarizedExperiment(counts)
 coldata = colData(se)
 coldata$Group = col.info$group

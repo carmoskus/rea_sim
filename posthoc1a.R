@@ -43,10 +43,10 @@ permute = function (analysis) {
 
         ## Save the groups
         d = c(a.d, b.d)
-        df = data.frame(group = ifelse(rownames(col.info) %in% d, "d", "r"))
+        df = data.frame(group = col.info$group, subset = ifelse(rownames(col.info) %in% d, "d", "r"))
         rownames(df) = rownames(col.info)
         filename = paste0(subdir, name, "_", i, ".txt") 
-        write.table(df, file=filename)
+        write.table(df, file=filename, quote=FALSE, sep="\t")
         
         ## Run analysis on discovery samples
         cat(paste0("echo Rscript sim1_", analysis, "_p.R ", arg.dir, " ", arg.num, " ", name, " ", i, " d | qsub -cwd\n"))

@@ -28,9 +28,7 @@ b.names = rownames(col.info)[col.info$group == "b"]
 
 ## Function to do one permutation of cross-validation and return
 ## TODO: make it check if output already exists
-permute = function (analysis) {
-    function (i) {
-
+permute = function (i) {
         ## Split into two groups, seperately for 'a' and 'b' groups
         p = 0.8
         n1 = p * conf$ns.g
@@ -48,9 +46,10 @@ permute = function (analysis) {
         filename = paste0(subdir, name, "_", i, ".txt") 
         write.table(df, file=filename, quote=FALSE, sep="\t")
         
+    function (analysis) {
         ## Run analysis on discovery samples
         cat(paste0("echo Rscript sim1_", analysis, "_p.R ", arg.dir, " ", arg.num, " ", name, " ", i, " d | qsub -cwd\n"))
-
+        
         ## Run analysis on replication samples
         cat(paste0("echo Rscript sim1_", analysis, "_p.R ", arg.dir, " ", arg.num, " ", name, " ", i, " r | qsub -cwd\n"))
 
@@ -64,4 +63,5 @@ N = 20
 ## "deseq2_notrim" "edgeR" "voom_TMM" "voom" "ttest_log_TMM" "ttest_log"
 analyses = c("deseq2_notrim", "edgeR", "voom_TMM", "voom", "ttest_log_TMM", "ttest_log")
 
-x = sapply(sapply(analyses, permute), function (f) sapply(1:N, f))
+#x = sapply(sapply(analyses, permute), function (f) sapply(1:N, f))
+x = sapply(sapply(1:N, permute), function (f) sapply(analyses, f))

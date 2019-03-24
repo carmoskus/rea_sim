@@ -9,32 +9,44 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
-name = "voom_TMM"
+denom = "all"
+test = 1 # 1 for Welch's t-test; 2 for Wilcoxon test
+
+name = paste0("aldex_", denom, "_", test)
 
 counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
 
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 
-# Do voom-limma
-library(limma)
-library(edgeR)
+#counts = counts[apply(counts, 1, var) > 0,] # Filter out genes with zero variance
 
-dge = DGEList(counts=counts)
-dge = calcNormFactors(dge)
+## Do DEX
+library(ALDEx2)
 
-design = model.matrix(~group, data=col.info)
+ald = aldex(counts, as.character(col.info$group), denom=denom)
 
-v = voom(dge, design)
-fit = lmFit(v, design)
-fit = eBayes(fit)
+## Make output data frame
+if (test == 1) {
+    p = ald$we.ep
+} else {
+    p = ald$wi.ep
+}
 
-# Make output data frame
-df = data.frame(rowMeans(v$E), fit$coefficients[,"groupb"], fit$t[,"groupb"], fit$df.residual, fit$p.value[,"groupb"])
-colnames(df) = c("baseMean", "log2FC", "t", "df", "p.value")
+df = data.frame(rowMeans(counts[rownames(ald),]), ald$diff.btw, ald$effect, ncol(counts)-2, p)
+colnames(df) = c("baseMean", "log2FC", "stat", "df", "p.value")
 
 df = df[order(df$p.value),]
 
-write.csv(df, file=paste0(subdir, name, "_res.csv"))
+skipped = setdiff(rownames(counts), rownames(ald))
+df2 = data.frame(baseMean=rep(0, length(skipped)))
+df2$log2FC = NA
+df2$stat = NA
+df2$df = NA
+df2$p.value = NA
+
+df.full = rbind(df, df2)
+
+write.csv(df.full, file=paste0(subdir, name, "_res.csv"))
 
 #write.csv(log2(nc+1), file=paste0(subdir, name, "_log2counts.csv"))
 #write.table(1/nfs, file=paste0(subdir, name, "_sizes.txt"), sep="\t")

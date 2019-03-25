@@ -9,12 +9,21 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
-denom = "all"
+#denom = "all"
+denom = "iqlr"
 test = 1 # 1 for Welch's t-test; 2 for Wilcoxon test
 
 name = paste0("aldex_", denom, "_", test)
 
-counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
+countsN = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
+
+## Convert counts to integer mode manually so I can fix overflows
+counts = as.integer(countsN)
+counts[is.na(counts)] = .Machine$integer.max
+dim(counts) = dim(countsN)
+rownames(counts) = rownames(countsN)
+colnames(counts) = colnames(countsN)
+rm(countsN)
 
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 
@@ -38,7 +47,7 @@ colnames(df) = c("baseMean", "log2FC", "stat", "df", "p.value")
 df = df[order(df$p.value),]
 
 skipped = setdiff(rownames(counts), rownames(ald))
-df2 = data.frame(baseMean=rep(0, length(skipped)))
+df2 = data.frame(baseMean=rowMeans(counts[skipped,]))
 df2$log2FC = NA
 df2$stat = NA
 df2$df = NA

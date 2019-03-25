@@ -9,9 +9,8 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
-#denom = "all"
-denom = "iqlr"
-test = 1 # 1 for Welch's t-test; 2 for Wilcoxon test
+denom = "all"
+test = 2 # 1 for Welch's t-test; 2 for Wilcoxon test
 
 name = paste0("aldex_", denom, "_", test)
 

@@ -7,8 +7,8 @@ n=`wc -l $cmds | awk '{print $1}'`
 
 while (( $i <= $n ))
 do
-    nrun=`jobs|wc -l`
-    if (( $nrun < 16 ))
+    nrun=`qstat -u carmoskus|wc -l`
+    if (( $nrun < 100 ))
     then
 	echo 'Running line' $i
 	eval `head -n $i $cmds | tail -n 1` &

@@ -48,10 +48,12 @@ permute = function (i) {
         
     function (analysis) {
         ## Run analysis on discovery samples
-        cat(paste0("echo Rscript sim1_", analysis, "_p.R ", arg.dir, " ", arg.num, " ", name, " ", i, " d | qsub -cwd\n"))
+        #cat(paste0("echo Rscript sim1_", analysis, "_p.R ", arg.dir, " ", arg.num, " ", name, " ", i, " d | qsub -cwd\n"))
+        cat(paste0("Rscript sim1_", analysis, "_p.R ", arg.dir, " ", arg.num, " ", name, " ", i, " d\n"))
         
         ## Run analysis on replication samples
-        cat(paste0("echo Rscript sim1_", analysis, "_p.R ", arg.dir, " ", arg.num, " ", name, " ", i, " r | qsub -cwd\n"))
+        #cat(paste0("echo Rscript sim1_", analysis, "_p.R ", arg.dir, " ", arg.num, " ", name, " ", i, " r | qsub -cwd\n"))
+        cat(paste0("Rscript sim1_", analysis, "_p.R ", arg.dir, " ", arg.num, " ", name, " ", i, " r\n"))
 
         ## Correlate the test statistics for the FDR < 0.05 set
         ## TODO: need to do this after the previous commands have finished

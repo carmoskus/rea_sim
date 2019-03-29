@@ -8,13 +8,12 @@ n=`wc -l $cmds | awk '{print $1}'`
 while (( $i <= $n ))
 do
     nrun=`jobs|wc -l`
-    if (( $nrun < 32 ))
+    if (( $nrun < 96 ))
     then
 	echo 'Running line' $i
-	eval `head -n $i $cmds | tail -n 1` &
+	`head -n $i $cmds | tail -n 1` &
 	(( i = $i + 1 ))
     else
-	sleep 5
+	sleep 2
     fi
-#    sleep 1
 done

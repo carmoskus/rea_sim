@@ -9,12 +9,13 @@ if (is.na(arg.dir) || nchar(arg.dir) == 0) {
 root.dir = "sims"
 subdir = paste0(root.dir, "/", arg.dir, "/")
 
-name = "ph1a"
+name = "ph2a"
 
 ## The number of simulations with permutations run on them
 N = 100
 ## "deseq2_notrim" "edgeR" "voom_TMM" "voom" "ttest_log_TMM" "ttest_log"
-analyses = c("deseq2_notrim", "edgeR", "voom_TMM", "voom", "ttest_log_TMM", "ttest_log")
+#analyses = c("deseq2_notrim", "edgeR", "voom_TMM", "voom", "ttest_log_TMM", "ttest_log")
+analyses = c("edgeR", "voom_TMM", "ttest_log_TMM")
 
 summarize = function (arg.num) {
     ## Load data for this simulation

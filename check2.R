@@ -7,7 +7,7 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
     quit(save="no", status=1)
 }
 
-th = c(0.01, 0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.95, 0.99)
+th = c(0.001, 0.01, 0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.95, 0.99, 0.999)
 
 checker = function (name) {
     de = read.csv(paste0("sims/", arg.dir, "/", arg.num, "/", name,"_res.csv"), row.names=1)
@@ -103,13 +103,19 @@ checker = function (name) {
 
 #modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim", "voom_quantile", "voom_TMM", "ttest_none", "deseq2_ns", "ttest_log")
 #modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim", "voom_quantile", "voom_TMM", "ttest_log")
-modes = c("deseq2", "deseq2_ns", "deseq2_trim_ms",
-          "deseq2_notrim", "deseq2_notrim_ms", "deseq2_notrim_ns",
-          "edgeR",
-          "voom", "voom_ns", "voom_quantile", "voom_TMM",
-          "ttest", "ttest_none",
-          "ttest_log", "ttest_log_ns", "ttest_log_TMM",
-          "ttest_vscale", "ttest_vnone", "ttest_vquantile")
+## modes = c("deseq2", "deseq2_ns", "deseq2_trim_ms",
+##           "deseq2_notrim", "deseq2_notrim_ms", "deseq2_notrim_ns",
+##           "edgeR",
+##           "voom", "voom_ns", "voom_quantile", "voom_TMM",
+##           "ttest", "ttest_none",
+##           "ttest_log", "ttest_log_ns", "ttest_log_TMM",
+##           "ttest_vscale", "ttest_vnone", "ttest_vquantile",
+##           "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2")
+modes = c("deseq2_notrim", "deseq2_notrim_ms",
+          "edgeR","edgeR_ms",
+          "voom", "voom_TMM",
+          "ttest_log", "ttest_log_TMM",
+          "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2")
 
 out = sapply(modes, checker)
 write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check2.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)

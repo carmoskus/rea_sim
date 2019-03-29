@@ -7,7 +7,7 @@ if (is.na(adj) || nchar(adj) == 0)
     adj = "fdr"
 
 if (is.na(arg.dir) || is.na(th) || nchar(arg.dir) == 0 ||  nchar(th) == 0) {
-    write("Usage: prog.R subdir analysis p-threshold", stderr())
+    write("Usage: prog.R subdir p-threshold adjustment", stderr())
     quit(save="no", status=1)
 }
 
@@ -37,7 +37,8 @@ fdr = function (i) {
 }
 
 N = 1000
-analyses = strsplit("deseq2_notrim   edgeR   voom_TMM        voom    ttest_log_TMM   ttest_log", "\\s+")[[1]]
+#analyses = strsplit("deseq2_notrim   edgeR   voom_TMM        voom    ttest_log_TMM   ttest_log", "\\s+")[[1]]
+analyses = strsplit("deseq2_notrim deseq2_notrim_ms edgeR edgeR_ms voom voom_TMM ttest_log ttest_log_TMM aldex_all_1 aldex_all_2 aldex_iqlr_1 aldex_iqlr_2", "\\s+")[[1]]
 out = t(sapply(sapply(1:N, fdr), function (f) sapply(analyses, f)))
 
 colnames(out) = sub("^(.*?)\\.se\\..*$", "\\1", colnames(out))

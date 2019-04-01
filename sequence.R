@@ -42,7 +42,9 @@ run = function (p) {
     cat("Making", subdir, "\n")
     dir.create(subdir)
 
-    
+    ## Output new meta file
+    write.table(conf.data, file=paste0(subdir, "meta.txt"), quote=FALSE, row.names=TRUE, col.names=FALSE, sep="\t")
+
 }
 
 out = sapply(args[3:length(args)], run)

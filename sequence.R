@@ -1,11 +1,11 @@
 args = commandArgs(trailingOnly=TRUE)
 arg.dir = args[1]
 arg.param = args[2]
-arg.end = as.numeric(args[3])
-arg.steps = as.integer(args[4])
+arg.first = as.numeric(args[3])
+## Continues on for as many arguments as the user wants to provide
 
-if (is.na(arg.dir) || is.na(arg.param) || nchar(arg.dir) == 0 || nchar(arg.param) == 0 || is.na(arg.end) || is.na(arg.steps)) {
-    write("Usage: prog.R template param end steps", stderr())
+if (is.na(arg.dir) || is.na(arg.param) || nchar(arg.dir) == 0 || nchar(arg.param) == 0 || is.na(arg.first)) {
+    write("Usage: prog.R template param change1 [change2]...", stderr())
     quit(save="no", status=1)
 }
 
@@ -24,9 +24,25 @@ conf.data = read.table(conf.file, sep="\t", stringsAsFactors=FALSE, row.names=1)
 conf = as.list(conf.data$V2)
 names(conf) = rownames(conf.data)
 
-conf.param = conf[[arg.param]]
-cat(arg.steps, "instances for", arg.param, "from", conf.param, "to", arg.end, "\n")
+run = function (p) {
+    ## Make an analysis directory with settings as in template, except changing param to p
+    cat("Making analysis with", arg.param, "set to", p, "\n")
 
-for (p in seq(conf.param, arg.end, length.out=arg.steps)) {
-    cat(p, "\n")
+    p = as.numeric(p)
+    conf.data[arg.param,"V2"] = p
+
+    subdir = paste0(root.dir, "/", arg.dir, "_" ,arg.param, "_", p, "/")
+
+    ## Check if dir exists
+    if (file.exists(subdir)) {
+        cat("ERROR:", subdir, "already exists\n")
+        quit(save="no", status=1)
+    }
+    
+    cat("Making", subdir, "\n")
+    dir.create(subdir)
+
+    
 }
+
+out = sapply(args[3:length(args)], run)

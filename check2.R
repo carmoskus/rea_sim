@@ -111,10 +111,15 @@ checker = function (name) {
 ##           "ttest_log", "ttest_log_ns", "ttest_log_TMM",
 ##           "ttest_vscale", "ttest_vnone", "ttest_vquantile",
 ##           "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2")
-modes = c("deseq2_notrim", "deseq2_notrim_ms",
-          "edgeR","edgeR_ms",
-          "voom", "voom_TMM",
-          "ttest_log", "ttest_log_TMM",
+## modes = c("deseq2_notrim", "deseq2_notrim_ms",
+##           "edgeR","edgeR_ms",
+##           "voom", "voom_TMM",
+##           "ttest_log", "ttest_log_TMM",
+##           "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2")
+modes = c("deseq2_notrim",
+          "edgeR",
+          "voom_TMM",
+          "ttest_log_TMM",
           "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2")
 
 out = sapply(modes, checker)

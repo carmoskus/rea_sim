@@ -10,10 +10,18 @@ do
     nrun=`jobs|wc -l`
     if (( $nrun < 96 ))
     then
-	echo 'Running line' $i
-	`head -n $i $cmds | tail -n 1` &
+	echo '--- Running line' $i of $n
+	if (( "$i" % 100 == 0 ))
+	then
+	    n=`wc -l $cmds | awk '{print $1}'`
+	fi
+	l=`head -n $i $cmds | tail -n 1`
+	echo --- $l
+	$l &
 	(( i = $i + 1 ))
     else
 	sleep 2
     fi
 done
+
+echo '--- Finished'

@@ -5,6 +5,8 @@ cmds="commands.txt"
 i=1
 n=`wc -l $cmds | awk '{print $1}'`
 
+echo '--- Reading from' $cmds
+
 while (( $i <= $n ))
 do
     nrun=`jobs|wc -l`

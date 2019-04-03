@@ -4,6 +4,8 @@
 *.e[0-9]*
 sims/
 Archive/
+Old/
 tmp/
 commands.txt
+commands?.txt
 q[1-9].[eo]

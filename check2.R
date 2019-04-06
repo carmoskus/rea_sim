@@ -120,7 +120,7 @@ modes = c("deseq2_notrim",
           "edgeR",
           "voom_TMM",
           "ttest_log_TMM",
-          "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2")
+          "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2", "aldex_iqlr_1k_1", "aldex_iqlr_1k_2")
 
 out = sapply(modes, checker)
 write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check2.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)

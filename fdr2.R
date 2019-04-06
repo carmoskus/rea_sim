@@ -38,7 +38,7 @@ fdr = function (i) {
 
 N = 1000
 #analyses = strsplit("deseq2_notrim   edgeR   voom_TMM        voom    ttest_log_TMM   ttest_log", "\\s+")[[1]]
-analyses = strsplit("deseq2_notrim   edgeR   voom_TMM  ttest_log_TMM   aldex_all_1 aldex_all_2 aldex_iqlr_1 aldex_iqlr_2", "\\s+")[[1]]
+analyses = strsplit("deseq2_notrim   edgeR   voom_TMM  ttest_log_TMM   aldex_all_1 aldex_all_2 aldex_iqlr_1 aldex_iqlr_2 aldex_iqlr_1k_1 aldex_iqlr_1k_2", "\\s+")[[1]]
 #analyses = strsplit("deseq2_notrim deseq2_notrim_ms edgeR edgeR_ms voom voom_TMM ttest_log ttest_log_TMM aldex_all_1 aldex_all_2 aldex_iqlr_1 aldex_iqlr_2", "\\s+")[[1]]
 out = t(sapply(sapply(1:N, fdr), function (f) sapply(analyses, f)))
 

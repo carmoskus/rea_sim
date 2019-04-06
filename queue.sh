@@ -22,7 +22,7 @@ do
 	$l &
 	(( i = $i + 1 ))
     else
-	sleep 2
+	sleep 1
     fi
 done
 

@@ -45,14 +45,17 @@ mk.out = function (test) {
     df = df[order(df$p.value),]
 
     skipped = setdiff(rownames(counts), rownames(ald))
-    df2 = data.frame(baseMean=rowMeans(counts[skipped,]))
-    df2$log2FC = NA
-    df2$stat = NA
-    df2$df = NA
-    df2$p.value = NA
+    if (length(skipped) > 0) {
+        df2 = data.frame(baseMean=rowMeans(counts[skipped,]))
+        df2$log2FC = NA
+        df2$stat = NA
+        df2$df = NA
+        df2$p.value = NA
 
-    df.full = rbind(df, df2)
-
+        df.full = rbind(df, df2)
+    } else {
+        df.full = df
+    }
     name = paste0("aldex_", denom, "_", test)
     write.csv(df.full, file=paste0(subdir, name, "_res.csv"))
 }

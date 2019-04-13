@@ -7,7 +7,7 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
     quit(save="no", status=1)
 }
 
-th = c(10^-(70:1), 3:17*0.05, 1-10^-(1:15))
+th = c(2^-(200:1), 1-2^-(2:50))
 
 checker = function (name) {
     de = read.csv(paste0("sims/", arg.dir, "/", arg.num, "/", name,"_res.csv"), row.names=1)
@@ -94,7 +94,7 @@ checker = function (name) {
         names(out) = c(nam, paste0(c("s.un", "s.fdr", "s.bon",
                                      "se.un", "se.fdr", "se.bon",
                                      "sd.un", "sd.fdr", "sd.bon",
-                                     "sde.un", "sde.fdr", "sde.bon"), sprintf("%.18e", t)))
+                                     "sde.un", "sde.fdr", "sde.bon"), sprintf("%a", t)))
     }
 
     ## Output

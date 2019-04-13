@@ -7,7 +7,7 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
     quit(save="no", status=1)
 }
 
-th = c(0.001, 0.01, 0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.95, 0.99, 0.999)
+th = c(1e-12, 1e-11, 1e-10, 1e-9, 1e-8, 1e-7, 1e-6, 1e-5, 1e-4, 0.001, 0.01, 0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.95, 0.99, 0.999, 0.9999, 0.99999, 0.999999)
 
 checker = function (name) {
     de = read.csv(paste0("sims/", arg.dir, "/", arg.num, "/", name,"_res.csv"), row.names=1)
@@ -117,7 +117,7 @@ checker = function (name) {
 ##           "ttest_log", "ttest_log_TMM",
 ##           "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2")
 modes = c("deseq2_notrim",
-          "edgeR",
+          "edgeR", "edgeR_notrend",
           "voom_TMM",
           "ttest_log_TMM",
           "aldex_iqlr_1", "aldex_iqlr_2")

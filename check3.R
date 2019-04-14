@@ -46,12 +46,6 @@ checker = function (name) {
     exp[is.na(expressed) | ! expressed] = NA
     dex.exp = intersect(dex.genes, exp.genes)
 
-    ## Calc adjusted pvals
-    exp.fdr = p.adjust(exp, method="BH")
-    all.fdr = p.adjust(all, method="BH")
-    exp.bon = p.adjust(exp, method="bonferroni")
-    all.bon = p.adjust(all, method="bonferroni")
-
     ## Start generating output
     n.dex = length(dex.genes)
     n.dex.exp = length(dex.exp)
@@ -65,36 +59,22 @@ checker = function (name) {
         ## Count sig ----------------------------------------
         ## All genes
         s.un = sum(all < t, na.rm=TRUE)
-        s.fdr = sum(all.fdr < t, na.rm=TRUE)
-        s.bon = sum(all.bon < t, na.rm=TRUE)
 
         ## Exp genes
         se.un = sum(exp < t, na.rm=TRUE)
-        se.fdr = sum(exp.fdr < t, na.rm=TRUE)
-        se.bon = sum(exp.bon < t, na.rm=TRUE)
 
         ## Count sig dex -------------------------------------
         ## All genes
         sd.un = sum(all[dex.ind] < t, na.rm=TRUE)
-        sd.fdr = sum(all.fdr[dex.ind] < t, na.rm=TRUE)
-        sd.bon = sum(all.bon[dex.ind] < t, na.rm=TRUE)
 
         ## Exp genes
         sde.un = sum(exp[dex.ind] < t, na.rm=TRUE)
-        sde.fdr = sum(exp.fdr[dex.ind] < t, na.rm=TRUE)
-        sde.bon = sum(exp.bon[dex.ind] < t, na.rm=TRUE)
 
         ## Add to output
         nam = names(out)
         out = c(out,
-                s.un, s.fdr, s.bon,
-                se.un, se.fdr, se.bon,
-                sd.un, sd.fdr, sd.bon, 
-                sde.un, sde.fdr, sde.bon)
-        names(out) = c(nam, paste0(c("s.un", "s.fdr", "s.bon",
-                                     "se.un", "se.fdr", "se.bon",
-                                     "sd.un", "sd.fdr", "sd.bon",
-                                     "sde.un", "sde.fdr", "sde.bon"), sprintf("%a", t)))
+                s.un, se.un, sd.un, sde.un)
+        names(out) = c(nam, paste0(c("s.un", "se.un", "sd.un", "sde.un"), sprintf("%a", t)))
     }
 
     ## Output

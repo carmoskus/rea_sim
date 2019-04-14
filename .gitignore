@@ -9,3 +9,4 @@ tmp/
 commands.txt
 commands?.txt
 q[1-9].[eo]
+q.*.[eo]

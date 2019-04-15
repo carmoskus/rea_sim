@@ -16,15 +16,19 @@ checker = function (name) {
     if ("logCPM" %in% nam) {
         ## edgeR
         all = de$PValue
+        dir = de$logFC
     } else if ("lfcSE" %in% nam) {
         ## DESeq2
         all = de$pvalue
+        dir = de$log2FoldChange
     } else if ("mean" %in% nam) {
         ## t-test
         all = de$p.value
+        dir = de$log2FC
     } else {
         ## Other = voom
         all = de$p.value
+        dir = de$log2FC
     }
     
     ## Load metadata showing which genes had effects induced
@@ -65,10 +69,15 @@ checker = function (name) {
 
         ## Count sig dex -------------------------------------
         ## All genes
-        sd.un = sum(all[dex.ind] < t, na.rm=TRUE)
+        mask = !is.na(all) & all < t & dex.ind
+        ds = rownames(de)[mask]
+        dir.real = rows[ds, "log2FC"]
+        dir.seen = dir[mask]
+
+        sd.un = sum(all[mask] < t & (sign(dir.real) == sign(dir.seen)), na.rm=TRUE)
 
         ## Exp genes
-        sde.un = sum(exp[dex.ind] < t, na.rm=TRUE)
+        sde.un = sum(exp[mask] < t & (sign(dir.real) == sign(dir.seen)), na.rm=TRUE)
 
         ## Add to output
         nam = names(out)
@@ -104,3 +113,5 @@ modes = c("deseq2_notrim",
 
 out = sapply(modes, checker)
 write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check3.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)
+
+warnings()

@@ -33,9 +33,10 @@ roc.exp = function (i) {
     for (th in thresholds) {
         se = a[th]
         sde = a[sub("^se", "sde", th)]
-        sce = se - sde
-        fpr = sce / nce
-        tpr = sde / nde
+        sdae = a[sub("^se", "sdae", th)]
+        sce = se - sdae
+        fpr = sce / (nce + (sde - sdae))
+        tpr = sdae / nde
         out = rbind(out, c(fpr, tpr))
     }
     out
@@ -43,4 +44,4 @@ roc.exp = function (i) {
 
 out = Reduce(rbind, lapply(1:1000, roc.exp))
 colnames(out) = c("FPR", "TPR")
-write.table(out, file=paste0("sims/", arg.dir, "/", analysis, "_roc_", adj, ".txt"), sep="\t", row.names=FALSE, col.names=TRUE)
+write.table(out, file=paste0("sims/", arg.dir, "/", analysis, "_roc_", adj, ".txt"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)

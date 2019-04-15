@@ -74,7 +74,7 @@ checker = function (name) {
         dir.real = rows[ds, "log2FC"]
         dir.seen = dir[mask]
 
-        sd.un = sum(all[mask] < t & (sign(dir.real) == sign(dir.seen)), na.rm=TRUE)
+        sd.un = sum((sign(dir.real) == sign(dir.seen)), na.rm=TRUE)
 
         ## Exp genes
         sde.un = sum(exp[mask] < t & (sign(dir.real) == sign(dir.seen)), na.rm=TRUE)

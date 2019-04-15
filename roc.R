@@ -28,18 +28,15 @@ roc.exp = function (i) {
     nde = a["n.dex.exp"]
     nce = ne - nde
 
-    thresholds = grep(paste0("se.", adj), names(a), value=TRUE)
-    out = NULL
-    for (th in thresholds) {
-        se = a[th]
-        sde = a[sub("^se", "sde", th)]
-        sdae = a[sub("^se", "sdae", th)]
-        sce = se - sdae
-        fpr = sce / (nce + (sde - sdae))
-        tpr = sdae / nde
-        out = rbind(out, c(fpr, tpr))
-    }
-    out
+    thresholds = grep(paste0("^se.", adj), names(a), value=TRUE)
+    se = a[thresholds]
+    sde = a[sub("^se", "sde", thresholds)]
+    sdae = a[sub("^se", "sdae", thresholds)]
+    sce = se - sdae
+    fpr = sce / (nce + (sde - sdae))
+    tpr = sdae / nde
+
+    data.frame(FPR=fpr, TPR=tpr)
 }
 
 out = Reduce(rbind, lapply(1:1000, roc.exp))

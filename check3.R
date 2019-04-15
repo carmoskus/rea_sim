@@ -41,6 +41,7 @@ checker = function (name) {
 
     ## Remove mean=zero genes from all
     all = all[rownames(de) %in% nonzero.genes]
+    dir = dir[rownames(de) %in% nonzero.genes]
     
     ## Setup list of expressed pvalues
     expressed = rownames(de)[rownames(de) %in% nonzero.genes] %in% exp.genes
@@ -59,6 +60,7 @@ checker = function (name) {
     out = c(n.all.exp=n.exp, n.nonzero=n.nonzero, n.dex.exp=n.dex.exp, n.dex=n.dex, n.dex.nonzero=n.dex.nonzero)
     
     ## Generate output by threshold for 1 analysis
+    de = de[rownames(de) %in% nonzero.genes,]
     for (t in th) {
         ## Count sig ----------------------------------------
         ## All genes
@@ -117,3 +119,5 @@ modes = c("deseq2_notrim",
 
 out = sapply(modes, checker)
 write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check3.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)
+
+warnings()

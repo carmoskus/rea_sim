@@ -26,28 +26,38 @@ fdr = function (arg.num) {
     if ("logCPM" %in% nam) {
         ## edgeR
         exp = de$PValue
+        dir = de$logFC
     } else if ("lfcSE" %in% nam) {
         ## DESeq2
         exp = de$pvalue
+        dir = de$log2FoldChange
     } else if ("mean" %in% nam) {
         ## t-test
         exp = de$p.value
+        dir = de$log2FC
     } else {
         ## Other = voom
         exp = de$p.value
+        dir = de$log2FC
     }
 
     if (adj != "un") {
         exp = p.adjust(exp, method=adj)
     }
     
-    sig = rownames(de)[exp <= th]
-    ns = length(sig)
-    nds = sum(sig %in% dex.genes)
+    mask = exp <= th
+    ns = sum(mask)
     
     if (ns == 0) {
         NA
     } else {
+        sig = rownames(de)[mask]
+        ds = sig[sig %in% dex.genes]
+        
+        dir.real = rows[ds, "log2FC"]
+        dir.seen = dir[mask][sig %in% dex.genes]
+
+        nds = sum(sign(dir.real) == sign(dir.seen))
         1 - nds / ns
     }
 }
@@ -55,3 +65,5 @@ fdr = function (arg.num) {
 N = 1000
 out = sapply(1:N, fdr)
 write(out, paste0("sims/", arg.dir, "/", analysis, "_fdr", th, "_", adj, ".txt"), sep="\t", ncolumns=1)
+
+warnings()

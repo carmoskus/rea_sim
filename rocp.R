@@ -42,4 +42,4 @@ roc.exp = function (i) {
 
 out = Reduce(rbind, lapply(1:1000, roc.exp))
 colnames(out) = c("FPR", "TPR", "FDR")
-write.table(out, file=paste0("sims/", arg.dir, "/", analysis, "_ropc_", adj, ".txt"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
+write.table(out, file=paste0("sims/", arg.dir, "/", analysis, "_roc_", adj, ".txt"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)

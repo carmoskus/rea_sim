@@ -35,10 +35,11 @@ roc.exp = function (i) {
     sce = se - sdae
     fpr = sce / (nce + (sde - sdae))
     tpr = sdae / nde
+    fdr = 1 - sdae / (sce + sdae)
 
-    data.frame(FPR=fpr, TPR=tpr)
+    data.frame(FPR=fpr, TPR=tpr, FDR=fdr)
 }
 
 out = Reduce(rbind, lapply(1:1000, roc.exp))
-colnames(out) = c("FPR", "TPR")
-write.table(out, file=paste0("sims/", arg.dir, "/", analysis, "_roc_", adj, ".txt"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)
+colnames(out) = c("FPR", "TPR", "FDR")
+write.table(out, file=paste0("sims/", arg.dir, "/", analysis, "_ropc_", adj, ".txt"), sep="\t", row.names=FALSE, col.names=TRUE, quote=FALSE)

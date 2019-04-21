@@ -16,8 +16,10 @@ counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t
 col.info = read.table(paste0(subdir, args[3], "_", args[4], ".txt"), header=TRUE, row.names=1, sep="\t")
 
 ## Subset the samples
-counts = counts[, col.info$subset == args[5]]
-col.info = col.info[col.info$subset == args[5],]
+if (!is.na(args[5]) & nchar(args[5]) > 0) {
+    counts = counts[, col.info$subset == args[5]]
+    col.info = col.info[col.info$subset == args[5],]
+}
 
 ## Normalize to total reads
 num.reads = colSums(counts)

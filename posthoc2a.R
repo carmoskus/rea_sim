@@ -47,8 +47,8 @@ permute = function (i) {
 ## Run the cross-validation metric on N permutations
 N = 20
 ## "deseq2_notrim" "edgeR" "voom_TMM" "voom" "ttest_log_TMM" "ttest_log"
-#analyses = c("deseq2_notrim", "edgeR", "voom_TMM", "voom", "ttest_log_TMM", "ttest_log")
-analyses = c("edgeR", "voom_TMM", "ttest_log_TMM")
+analyses = c("deseq2_notrim", "edgeR", "voom_TMM", "voom", "ttest_log_TMM", "ttest_log")
+#analyses = c("edgeR", "voom_TMM", "ttest_log_TMM")
 
 #x = sapply(sapply(analyses, permute), function (f) sapply(1:N, f))
 x = sapply(sapply(1:N, permute), function (f) sapply(analyses, f))

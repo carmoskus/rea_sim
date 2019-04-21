@@ -9,12 +9,18 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
-name = "deseq2_notrim_ms"
+name = "deseq2_notrim_TMM"
 
 counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
 
-num.reads = colSums(counts)
-sfs = num.reads / mean(num.reads)
+library(limma)
+library(edgeR)
+
+dge = DGEList(counts=counts)
+dge = calcNormFactors(dge)
+
+eff.lib.sizes = dge$samples$lib.size * dge$samples$norm.factors
+sfs = eff.lib.sizes / mean(eff.lib.sizes)
 
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 

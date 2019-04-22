@@ -14,12 +14,14 @@ if (is.na(arg.dir) || is.na(th) || nchar(arg.dir) == 0 || is.na(analysis) || nch
 
 ## Function to calculate FDR in named run
 fdr = function (arg.num) {
+    cat(arg.num, "\n")
     ## Load metadata showing which genes had effects induced
     rows = read.table(paste0("sims/", arg.dir, "/", arg.num, "/rows.txt"), row.names=1)
     exp.genes = rownames(rows)[!is.na(rows$mean) & rows$mean >= 3.5]
     dex.genes = intersect(exp.genes, rownames(rows)[rows$log2FC != 0])
     
     de = read.csv(paste0("sims/", arg.dir, "/", arg.num, "/", analysis, "_res.csv"), row.names=1)
+    exp.genes = intersect(exp.genes, rownames(de))
     de = de[exp.genes,]
     nam = names(de)
 

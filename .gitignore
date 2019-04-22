@@ -3,6 +3,7 @@
 *.o[0-9]*
 *.e[0-9]*
 sims/
+sims[0-9]
 Archive/
 Old/
 tmp/

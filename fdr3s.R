@@ -20,6 +20,7 @@ fdr = function (arg.num) {
     dex.genes = intersect(exp.genes, rownames(rows)[rows$log2FC != 0])
     
     de = read.csv(paste0("sims/", arg.dir, "/", arg.num, "/", analysis, "_res.csv"), row.names=1)
+    exp.genes = intersect(exp.genes, rownames(de))
     de = de[exp.genes,]
     nam = names(de)
 

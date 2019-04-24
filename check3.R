@@ -99,7 +99,7 @@ checker = function (name) {
 ## modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim", "voom_quantile", "voom_TMM", "ttest_none", "deseq2_ns", "ttest_log")
 ## modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim", "voom_quantile", "voom_TMM", "ttest_log")
 modes = c("deseq2_notrim", "deseq2_notrim_ms", "deseq2_notrim_ns", "deseq2_notrim_TMM", "deseq2_notrim_UQ", "deseq2_notrim_RLE",
-          "edgeR", "edgeR_ms", "edgeR_ns", "edgeR_UQ", "edgeR_RLE", "edgeR_notrend",
+          "edgeR", "edgeR_ms", "edgeR_ns", "edgeR_UQ", "edgeR_RLE", # "edgeR_notrend",
           "voom", "voom_ns", "voom_quantile", "voom_TMM", "voom_UQ", "voom_RLE",
 ##          "ttest", "ttest_none",
           "ttest_log", "ttest_log_ns", "ttest_log_TMM", "ttest_log_UQ", "ttest_log_RLE", "ttest_vquantile",

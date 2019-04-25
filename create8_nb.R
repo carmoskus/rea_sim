@@ -55,7 +55,7 @@ log2FC = c(rep(0, conf$n), sample(c(-1,1), conf$n.dex, replace=TRUE)*runif(conf$
 meansA = matrix(rgamma(conf$ns.g * length(means), shape=1/psis^2, rate=1/(means*psis^2)), nrow=length(means)) # An M * n matrix with the means in each sample
 meansB = matrix(rgamma(conf$ns.g * length(means), shape=1/psis^2, rate=1/(means*2^log2FC*psis^2)), nrow=length(means)) # An M * n matrix with the means in each sample
 
-## Adjust means based on size factors
+## Adjust means based on size factors - TODO: check that this is right. I think multiplying by sizes after taking from gamma will increase variance
 meansA = t(apply(meansA, 1, function (r) r*sizes[1:conf$ns.g])) # An M * n matrix with the mean in each sample adjusted by size factor
 meansB = t(apply(meansB, 1, function (r) r*sizes[conf$ns.g + 1:conf$ns.g])) # An M * n matrix with the mean in each sample adjusted by size factor
 

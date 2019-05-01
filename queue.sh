@@ -12,8 +12,8 @@ do
     nrun=`jobs|wc -l`
     if (( $nrun < 96 ))
     then
-	echo '--- Running line' $i of $n
-	if (( "$i" % 100 == 0 ))
+	echo '--- Running line' $i of $n '-' $nrun
+	if (( "$i" % 1024 == 0 ))
 	then
 	    n=`wc -l $cmds | awk '{print $1}'`
 	fi

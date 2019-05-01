@@ -10,7 +10,7 @@ echo '--- Reading from' $cmds
 
 while (( $i <= $n ))
 do
-    (( nto = 6 - `jobs|wc -l` ))
+    (( nto = 96 - `jobs|wc -l` ))
     if (( $nto > 0 ))
     then
 	if (( nto == 1 ))

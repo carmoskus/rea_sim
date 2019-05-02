@@ -56,3 +56,5 @@ done
 wait
 
 echo '--- Finished'
+
+#gcloud compute instances stop --zone us-east1-b chris-small2

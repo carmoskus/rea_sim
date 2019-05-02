@@ -45,8 +45,17 @@ mk.out = function (test) {
     df = df[order(df$p.value),]
 
     skipped = setdiff(rownames(counts), rownames(ald))
-    if (length(skipped) > 0) {
+    ns = length(skipped)
+    if (ns > 1) {
         df2 = data.frame(baseMean=rowMeans(counts[skipped,]))
+        df2$log2FC = NA
+        df2$stat = NA
+        df2$df = NA
+        df2$p.value = NA
+
+        df.full = rbind(df, df2)
+    } else if (ns == 1) {
+        df2 = data.frame(baseMean=mean(counts[skipped,]))
         df2$log2FC = NA
         df2$stat = NA
         df2$df = NA
@@ -60,11 +69,4 @@ mk.out = function (test) {
     write.csv(df.full, file=paste0(subdir, name, "_res.csv"))
 }
 
-sapply(1:2, mk.out)
-
-#write.csv(log2(nc+1), file=paste0(subdir, name, "_log2counts.csv"))
-#write.table(1/nfs, file=paste0(subdir, name, "_sizes.txt"), sep="\t")
-#mc = data.frame(AveLogCPM=y$AveLogCPM, trended.dispersion=y$trended.dispersion, tagwise.dispersion=y$tagwise.dispersion)
-#rownames(mc) = rownames(y)
-#write.table(mc, file=paste0(subdir, name, "_meta.txt"), sep="\t")
-
+o = sapply(1:2, mk.out)

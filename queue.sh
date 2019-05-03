@@ -53,7 +53,13 @@ do
     fi
 done
 
-wait
+nrun=`jobs|wc -l`
+while (( $nrun > 1 ))
+do
+    wait
+    sleep 1
+    nrun=`jobs|wc -l`
+done
 
 echo '--- Finished'
 

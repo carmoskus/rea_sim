@@ -17,8 +17,20 @@ p.nb = function () {
 }
 
 ## Load edgeR and voom-limma with TMM
+ed = read.csv(paste0(subdir, "edgeR_res.csv"), row.names=1)
+vd = read.csv(paste0(subdir, "voom_TMM_res.csv"), row.names=1)
+
+genes = intersect(rownames(ed), rownames(vd))
+ed = ed[genes,]
+vd = vd[genes,]
 
 ## Average test statistics
+pnb = p.nb()
+new.log2fc = pnb*ed$logFC + (1-pnb)*vd$log2FC
+new.p = pnb*ed$PValue + (1-pnb)*vd$p.value
 
+nd = data.frame(log2FC=new.log2fc, p.value=new.p)
+rownames(nd) = genes
+nd = nd[order(nd$p.value),]
 
-#write.csv(topTags(lrt, n=100000), file=paste0(subdir, name, "_res.csv"))
+write.csv(nd, paste0(subdir, name, "_res.csv"))

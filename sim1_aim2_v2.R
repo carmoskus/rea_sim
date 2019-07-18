@@ -9,7 +9,7 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
-name = "aim2_v1"
+name = "aim2_v2"
 
 ## Function to look at data and return posterior probability of being NB, given it is either NB or log-normal
 p.nb = function () {

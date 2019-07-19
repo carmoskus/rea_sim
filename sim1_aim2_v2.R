@@ -13,7 +13,12 @@ name = "aim2_v2"
 
 ## Function to look at data and return posterior probability of being NB, given it is either NB or log-normal
 p.nb = function () {
-    0.5
+    d = read.table(paste0(subdir, "aim2_checkdist1.txt"), header=TRUE, sep="\t")
+    if (d$estimate < 0) {
+        1 - 0.5 * d$p.value
+    } else {
+        0.5 * d$p.value
+    }
 }
 
 ## Load edgeR and voom-limma with TMM

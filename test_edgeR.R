@@ -22,6 +22,7 @@ col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep=
 library("edgeR")
 
 mod = model.matrix(~ col.info$group)
+mod0 = model.matrix(~ 1, data=col.info)
 
 y = DGEList(counts=counts)
 y = calcNormFactors(y)
@@ -29,9 +30,15 @@ y = estimateGLMCommonDisp(y, mod)
 y = estimateGLMTrendedDisp(y, mod)
 y = estimateGLMTagwiseDisp(y, mod)
 fit = glmFit(y, mod)
+fit2 = glmFit(y, mod0)
 
 # Output data
 lrt = glmLRT(fit, coef=2)
+
+## Stats
+head(fit2$deviance - fit$deviance)
+head(lrt$table$LR)
+
 ##topTags(lrt, n=50)
 write.csv(topTags(lrt, n=100000), file=paste0(subdir, name, "_res.csv"))
 

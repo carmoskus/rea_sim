@@ -9,11 +9,12 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
-name = "aim2_v2"
+name = "aim2_v3"
 
 ## Function to look at data and return posterior probability of being NB, given it is either NB or log-normal
+## TODO: make sure to check if K is Inf and handle properly
 p.nb = function () {
-    d = read.table(paste0(subdir, "aim2_checkdist1.txt"), header=TRUE, sep="\t")
+    d = read.table(paste0(subdir, "aim2_checkdist2.txt"), header=TRUE, sep="\t")
     if (d$estimate < 0) {
         1 - 0.5 * d$p.value
     } else {

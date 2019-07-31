@@ -11,29 +11,22 @@ subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
 name = "aim2_v3"
 
-## Function to look at data and return posterior probability of being NB, given it is either NB or log-normal
-## TODO: make sure to check if K is Inf and handle properly
-p.nb = function () {
-    d = read.table(paste0(subdir, "aim2_checkdist2.txt"), header=TRUE, sep="\t")
-    if (d$estimate < 0) {
-        1 - 0.5 * d$p.value
-    } else {
-        0.5 * d$p.value
-    }
-}
-
 ## Load edgeR and voom-limma with TMM
 ed = read.csv(paste0(subdir, "edgeR_res.csv"), row.names=1)
 vd = read.csv(paste0(subdir, "voom_TMM_res.csv"), row.names=1)
+cd = read.table(paste0(subdir, "aim2_checkdist2.txt"), header=TRUE, sep="\t")
 
 genes = intersect(rownames(ed), rownames(vd))
 ed = ed[genes,]
 vd = vd[genes,]
+cd = cd[genes,]
+
+## Look at GOF data and return posterior probability of being NB, given it is either NB or log-normal
+p.nb = ifelse(cd$K == Inf, 1, cd$K/(1+cd$K))
 
 ## Average test statistics
-pnb = p.nb()
-new.log2fc = pnb*ed$logFC + (1-pnb)*vd$log2FC
-new.p = pnb*ed$PValue + (1-pnb)*vd$p.value
+new.log2fc = p.nb*ed$logFC + (1-p.nb)*vd$log2FC
+new.p = p.nb*ed$PValue + (1-p.nb)*vd$p.value
 
 nd = data.frame(log2FC=new.log2fc, p.value=new.p)
 rownames(nd) = genes

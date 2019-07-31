@@ -1,0 +1,4 @@
+1 - 50/50 averaging of p-values
+2 - averaging of p-values based on Wilcoxon test of comparison of KS p-values for GOF to distributions
+3 - averaging of p-values directly based on KS p-values
+4 -

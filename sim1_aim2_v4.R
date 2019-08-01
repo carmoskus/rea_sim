@@ -9,7 +9,7 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
-name = "aim2_v3"
+name = "aim2_v4"
 
 ## Load edgeR and voom-limma with TMM
 ed = read.csv(paste0(subdir, "edgeR_res.csv"), row.names=1)
@@ -24,11 +24,22 @@ cd = cd[genes,]
 ## Look at GOF data and return posterior probability of being NB, given it is either NB or log-normal
 p.nb = ifelse(cd$K == Inf, 1, cd$K/(1+cd$K))
 
-## Average test statistics
+## Average log2fc
 new.log2fc = p.nb*ed$logFC + (1-p.nb)*vd$log2FC
-new.p = p.nb*ed$PValue + (1-p.nb)*vd$p.value
 
-nd = data.frame(log2FC=new.log2fc, p.value=new.p)
+## Estimate standard error by back converting the p-value to a z-value and then multiplying by
+ed.z = qnorm(ed$PValue/2, lower.tail=FALSE)
+ed.se = abs(ed$logFC) / ed.z
+
+vd.z = qnorm(vd$p.value/2, lower.tail=FALSE)
+vd.se = abs(vd$log2FC) / vd.z
+
+new.var = (ed.se^2 + ed$logFC^2)*p.nb + (vd.se^2 + vd$log2FC^2)*(1-p.nb) - new.log2fc^2
+
+new.z = new.log2fc / sqrt(new.var)
+new.p = pnorm(abs(new.z), lower.tail=FALSE)*2
+
+nd = data.frame(log2FC=new.log2fc, var=new.var, p.value=new.p)
 rownames(nd) = genes
 nd = nd[order(nd$p.value),]
 

@@ -2,3 +2,4 @@
 2 - averaging of p-values based on Wilcoxon test of comparison of KS p-values for GOF to distributions
 3 - averaging of p-values directly based on KS p-values
 4 - using BMA to average log2FC estimates and then do a Wald test
+5 - same as v4, except using the 1-sample KS test results (v3 of checkdist)

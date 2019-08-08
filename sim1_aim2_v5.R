@@ -9,12 +9,12 @@ if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) ==
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
-name = "aim2_v4"
+name = "aim2_v5"
 
 ## Load edgeR and voom-limma with TMM
 ed = read.csv(paste0(subdir, "edgeR_res.csv"), row.names=1)
 vd = read.csv(paste0(subdir, "voom_TMM_res.csv"), row.names=1)
-cd = read.table(paste0(subdir, "aim2_checkdist2.txt"), header=TRUE, sep="\t")
+cd = read.table(paste0(subdir, "aim2_checkdist3.txt"), header=TRUE, sep="\t")
 
 genes = intersect(rownames(ed), rownames(vd))
 ed = ed[genes,]

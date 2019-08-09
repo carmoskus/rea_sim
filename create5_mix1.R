@@ -64,6 +64,7 @@ meansB = matrix(means*2^log2FC, nrow=length(means)) %*% sizes[conf$ns.g + 1:conf
 varsA = meansA + (meansA*psis)^2
 meanlogsA = log(meansA)-1/2*log(varsA/meansA^2+1)
 varlogsA = log(varsA/meansA^2+1)
+## FIXME: rlnorm calls generate warnings because of means=0
 a.ln = matrix(rlnorm(conf$ns.g * length(means), meanlog=meanlogsA, sdlog=sqrt(varlogsA)), nrow=length(means))
 a.ln = round(a.ln)
 a.nb = matrix(rnbinom(conf$ns.g * length(means), mu=meansA, size=1/psis^2), nrow=length(means))

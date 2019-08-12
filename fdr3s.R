@@ -37,7 +37,7 @@ fdr = function (arg.num) {
         exp = de$p.value
         dir = de$log2FC
     } else {
-        ## Other = voom
+        ## Other = voom, aim2
         exp = de$p.value
         dir = de$log2FC
     }

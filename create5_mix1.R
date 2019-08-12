@@ -2,9 +2,6 @@ args = commandArgs(trailingOnly=TRUE)
 arg.dir = args[1]
 arg.num = args[2]
 
-arg.dir = "v5mix1ASHG"
-arg.num = "1"
-
 if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) == 0) {
     write("Usage: prog.R subdir num", stderr())
     quit(save="no", status=1)

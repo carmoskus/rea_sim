@@ -1,3 +1,4 @@
 1 - Uses Wilcoxon test on 2-sample KS p-values to determine ratio for whole dataset
 2 - Uses 2-sample KS p-values to determine ratio on gene by gene basis
 3 - Uses 1-sample KS p-values to determine ratio on gene by gene basis
+4 - Uses 1-sample KS p-values with continuity correction on NB to determine ratio on gene by gene basis

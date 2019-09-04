@@ -50,21 +50,24 @@ fdr = function (arg.num) {
     ns = sum(mask)
     
     if (ns == 0) {
-        NA
+        c(NA, 0)
     } else {
         sig = rownames(de)[mask]
         ds = sig[sig %in% dex.genes]
+
+        tde = length(dex.genes)
         
         dir.real = rows[ds, "log2FC"]
         dir.seen = dir[mask][sig %in% dex.genes]
 
         nds = sum(sign(dir.real) == sign(dir.seen))
-        1 - nds / ns
+        c(1 - nds / ns, nds / tde) # (FDR, power)
     }
 }
 
 N = 1000
-out = sapply(1:N, fdr)
-write(out, paste0("sims/", arg.dir, "/", analysis, "_fdr", th, "_", adj, ".txt"), sep="\t", ncolumns=1)
+out = t(sapply(1:N, fdr))
+colnames(out) = c("eFDR", "Power")
+write.table(out, file=paste0("sims/", arg.dir, "/", analysis, "_fdrp", th, "_", adj, ".txt"), sep="\t", quote=FALSE, row.names=FALSE)
 
 warnings()

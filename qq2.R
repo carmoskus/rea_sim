@@ -7,7 +7,7 @@ if (is.na(arg.dir) || is.na(arg.ana) || nchar(arg.dir) == 0 || nchar(arg.ana) ==
     quit(save="no", status=1)
 }
 
-name = "qq2"
+name = paste0("qq2_", arg.ana)
 subdir = "sims/"
 
 checker = function (arg.num) {
@@ -29,7 +29,7 @@ checker = function (arg.num) {
         pvals = de[exp.genes, "p.value"]
     }
 
-    pvals
+    sort(pvals)
 }
 
 pvals = unlist(sapply(1:1000, checker))

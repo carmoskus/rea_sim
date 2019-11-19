@@ -32,6 +32,9 @@ lrt = glmLRT(fit, coef=2)
 ##topTags(lrt, n=50)
 write.csv(topTags(lrt, n=100000), file=paste0(subdir, name, "_res.csv"))
 
+## e.cpm = cpm(y)
+## e.lcpm = cpm(y, log=TRUE)
+
 #sfs = y$samples$lib.size / mean(y$samples$lib.size)
 nfs = y$samples$norm.factors
 eff.lib.sizes = y$samples$lib.size * nfs

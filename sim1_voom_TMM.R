@@ -29,8 +29,8 @@ fit = lmFit(v, design)
 fit = eBayes(fit)
 
 # Make output data frame
-df = data.frame(rowMeans(v$E), fit$coefficients[,"groupb"], fit$t[,"groupb"], fit$df.residual, fit$p.value[,"groupb"])
-colnames(df) = c("baseMean", "log2FC", "t", "df", "p.value")
+df = data.frame(rowMeans(v$E), log2(rowMeans(2^v$E)), fit$coefficients[,"groupb"], fit$t[,"groupb"], fit$df.residual, fit$p.value[,"groupb"])
+colnames(df) = c("baseMean", "logOfMeans", "log2FC", "t", "df", "p.value")
 
 df = df[order(df$p.value),]
 

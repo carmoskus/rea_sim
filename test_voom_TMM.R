@@ -1,14 +1,7 @@
-args = commandArgs(trailingOnly=TRUE)
-arg.dir = args[1]
-arg.num = args[2]
+##
 
-arg.dir = "v8nb2ASHG"
-arg.num = "101"
-
-if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) == 0) {
-    write("Usage: prog.R subdir num", stderr())
-    quit(save="no", status=1)
-}
+arg.dir = "nullA_v5nb2"
+arg.num = "1"
 
 subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
 
@@ -22,36 +15,27 @@ col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep=
 library(limma)
 library(edgeR)
 
-dge = DGEList(counts=counts)
-dge = calcNormFactors(dge)
+v.dge = DGEList(counts=counts)
+v.dge = calcNormFactors(v.dge)
 
-design = model.matrix(~group, data=col.info)
+mod = model.matrix(~ group, data=col.info)
 
-v = voom(dge, design)
-fit = lmFit(v, design)
-fit2 = eBayes(fit)
+v = voom(v.dge, mod)
+v.fit = lmFit(v, mod)
+v.eb = eBayes(v.fit)
 
-mod0 = model.matrix(~ 1, data=col.info)
-v0 = voom(dge, mod0)
-fit0 = lmFit(v0, mod0)
+## Make output data frame
+v.df = data.frame(rowMeans(v$E), v.eb$coefficients[,"groupb"], v.eb$t[,"groupb"], v.eb$df.residual, v.eb$p.value[,"groupb"])
+colnames(v.df) = c("baseMean", "log2FC", "t", "df", "p.value") ## "baseMean" is identical to v.eb$Amean
 
-## Calculate deviance per gene
-my.dev = apply(v$E, 1, function (r) sum((r-mean(r))^2))
-m0 = apply(v$E, 1, function (r) lm(r ~ 1))
-m0.d = sapply(m0, deviance)
+## df = df[order(df$p.value),]
+## write.csv(df, file=paste0(subdir, name, "_res.csv"))
 
+v.m = matrix(c(log2(rowMeans(counts)+1), rowMeans(log2(counts+1)), v.df$baseMean),
+             nrow=nrow(counts))
+colnames(v.m) = c("logMeanCounts", "meanLogCounts", "voomMean")
 
-# Make output data frame
-df = data.frame(rowMeans(v$E), fit$coefficients[,"groupb"], fit$t[,"groupb"], fit$df.residual, fit$p.value[,"groupb"])
-colnames(df) = c("baseMean", "log2FC", "t", "df", "p.value")
+v.me = v.m[rowMeans(v.m) > quantile(rowMeans(v.m), probs=0.75),]
 
-df = df[order(df$p.value),]
-
-write.csv(df, file=paste0(subdir, name, "_res.csv"))
-
-#write.csv(log2(nc+1), file=paste0(subdir, name, "_log2counts.csv"))
-#write.table(1/nfs, file=paste0(subdir, name, "_sizes.txt"), sep="\t")
-#mc = data.frame(AveLogCPM=y$AveLogCPM, trended.dispersion=y$trended.dispersion, tagwise.dispersion=y$tagwise.dispersion)
-#rownames(mc) = rownames(y)
-#write.table(mc, file=paste0(subdir, name, "_meta.txt"), sep="\t")
+v.ec = cor(v.me)
 

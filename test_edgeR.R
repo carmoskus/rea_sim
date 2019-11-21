@@ -12,7 +12,7 @@ counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 
 ## Start edgeR
-library("edgeR")
+library(edgeR)
 
 mod = model.matrix(~ group, data=col.info)
 
@@ -48,12 +48,12 @@ mc = data.frame(AveLogCPM=y$AveLogCPM, trended.dispersion=y$trended.dispersion, 
 rownames(mc) = rownames(y)
 ## write.table(mc, file=paste0(subdir, name, "_meta.txt"), sep="\t")
 
-m = matrix(c(rowMeans(nc.l), log2(rowMeans(nc)+1), y$AveLogCPM, rowMeans(e.lcpm), log2(rowMeans(e.cpm)+1), tt$logCPM),
+e.m = matrix(c(log2(rowMeans(counts)+1), rowMeans(log2(counts+1)), rowMeans(nc.l), log2(rowMeans(nc)+1), y$AveLogCPM, rowMeans(e.lcpm), log2(rowMeans(e.cpm)+1), tt$logCPM),
              nrow=nrow(counts))
-colnames(m) = c("nc.l", "log2.nc", "AveLogCPM", "e.lcpm", "log2.cpm", "logCPM")
+colnames(e.m) = c("logMeanCounts", "meanLogCounts", "nc.l", "log2.nc", "AveLogCPM", "e.lcpm", "log2.cpm", "logCPM")
 
-m = m[, c("nc.l", "e.lcpm", "log2.nc", "log2.cpm", "AveLogCPM")] ## "logCPM"/tt$logCPM is the exact same as AveLogCPM
-m.e = m[rowMeans(m) > quantile(rowMeans(m), probs=0.75),]
+e.m = e.m[, c("meanLogCounts", "nc.l", "e.lcpm", "logMeanCounts", "log2.nc", "log2.cpm", "AveLogCPM")] ## "logCPM"/tt$logCPM is the exact same as AveLogCPM
+e.me = e.m[rowMeans(e.m) > quantile(rowMeans(e.m), probs=0.75),]
 
-m.ec = cor(m.e)
+e.mec = cor(e.me)
 

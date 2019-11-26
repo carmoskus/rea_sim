@@ -108,9 +108,10 @@ colnames(m.s) = c("u.lms", "u.mls", "n.lms", "n.mls", "e.sd", "v.sd", "b.sd")
 
 ## Filter for minimum expression
 m.em = rowMeans(m.e)
-m.e = m.e[m.em > quantile(m.em, probs=0.75),]
-m.f = m.f[m.em > quantile(m.em, probs=0.75),]
-m.s = m.s[m.em > quantile(m.em, probs=0.75),]
+m.mask = m.em > quantile(m.em, probs=0.75)
+m.e = m.e[m.mask,]
+m.f = m.f[m.mask,]
+m.s = m.s[m.mask,]
 
 ## Make correlation matrices
 c.e = cor(m.e)

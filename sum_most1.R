@@ -58,7 +58,7 @@ d.res$z = qnorm(d.res$pvalue/2, lower.tail=FALSE)
 d.res$sd = abs(d.res$log2FoldChange) / d.res$z
 
 t.res$z = qnorm(t.res$p.value/2, lower.tail=FALSE)
-t.res$sd = abs(t.res$log2FC) / d.res$z
+t.res$sd = abs(t.res$log2FC) / t.res$z
 
 ## Manually normalize counts
 dge = DGEList(counts=counts)
@@ -125,11 +125,11 @@ m.s = matrix(c(u.lms, u.mls, n.lms, n.mls, e.res$sd, v.res$sd, sqrt(b.res$var), 
 colnames(m.s) = c("u.lms", "u.mls", "n.lms", "n.mls", "e.sd", "v.sd", "b.sd", "d.sd", "t.sd")
 
 ## Filter for minimum expression
-m.em = rowMeans(m.e)
-m.mask = m.em > quantile(m.em, probs=0.75)
-m.e = m.e[m.mask,]
-m.f = m.f[m.mask,]
-m.s = m.s[m.mask,]
+## m.em = rowMeans(m.e)
+## m.mask = m.em > quantile(m.em, probs=0.75)
+## m.e = m.e[m.mask,]
+## m.f = m.f[m.mask,]
+## m.s = m.s[m.mask,]
 
 ## Make correlation matrices
 c.e = cor(m.e)

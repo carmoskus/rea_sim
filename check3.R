@@ -98,16 +98,16 @@ checker = function (name) {
 
 ## modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim", "voom_quantile", "voom_TMM", "ttest_none", "deseq2_ns", "ttest_log")
 ## modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim", "voom_quantile", "voom_TMM", "ttest_log")
-modes = c("deseq2_notrim", "deseq2_notrim_ms", "deseq2_notrim_ns", "deseq2_notrim_TMM", "deseq2_notrim_UQ", "deseq2_notrim_RLE",
-          "deseq2", "deseq2_trim_ms", "deseq2_ns", 
-          "edgeR", "edgeR_ms", "edgeR_ns", "edgeR_UQ", "edgeR_RLE", "edgeR_notrend",
-          "voom", "voom_ns", "voom_quantile", "voom_TMM", "voom_UQ", "voom_RLE", "voom_manWeights", "voom_onlyE",
-         "ttest", "ttest_none",
-          "ttest_log", "ttest_log_ns", "ttest_log_TMM", "ttest_log_UQ", "ttest_log_RLE", "ttest_vquantile",
-         "ttest_vscale", "ttest_vnone", "ttest_vquantile",
-         "ttest_voomt_TMM", "ttest_voomt_ms", "ttest_voomt_ns",
-         "aim2_v1", "aim2_v2", "aim2_v3", "aim2_v4", "aim2_v5", "aim2_v6") #,
-#          "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2")
+## modes = c("deseq2_notrim", "deseq2_notrim_ms", "deseq2_notrim_ns", "deseq2_notrim_TMM", "deseq2_notrim_UQ", "deseq2_notrim_RLE",
+##           "deseq2", "deseq2_trim_ms", "deseq2_ns", 
+##           "edgeR", "edgeR_ms", "edgeR_ns", "edgeR_UQ", "edgeR_RLE", "edgeR_notrend",
+##           "voom", "voom_ns", "voom_quantile", "voom_TMM", "voom_UQ", "voom_RLE", "voom_manWeights", "voom_onlyE",
+##          "ttest", "ttest_none",
+##           "ttest_log", "ttest_log_ns", "ttest_log_TMM", "ttest_log_UQ", "ttest_log_RLE", "ttest_vquantile",
+##          "ttest_vscale", "ttest_vnone", "ttest_vquantile",
+##          "ttest_voomt_TMM", "ttest_voomt_ms", "ttest_voomt_ns",
+##          "aim2_v1", "aim2_v2", "aim2_v3", "aim2_v4", "aim2_v5", "aim2_v6") #,
+##          "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2")
 ## modes = c("deseq2_notrim", "deseq2_notrim_ms",
 ##           "edgeR","edgeR_ms",
 ##           "voom", "voom_TMM",
@@ -119,6 +119,7 @@ modes = c("deseq2_notrim", "deseq2_notrim_ms", "deseq2_notrim_ns", "deseq2_notri
 ##           "ttest_log_TMM",
 ##           "aldex_iqlr_1", "aldex_iqlr_2")
 ## modes = c("deseq2_notrim", "edgeR", "voom_TMM", "ttest_log_TMM", "aim2_v1", "aim2_v2", "aim2_v3", "aim2_v4", "aim2_v5", "aim2_v6")
+modes = c("edgeR", "voom_TMM", "aim2_v1", "aim2_v2", "aim2_v6")
 
 out = sapply(modes, checker)
 write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check3.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)

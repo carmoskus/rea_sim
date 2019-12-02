@@ -37,7 +37,7 @@ ks.ln = sapply(1:nrow(d2), function (i) {
 })
 
 ## Test for negative binomial fit
-nb.p = data.frame(mu=means, size=(means^2)/(vars-means))
+nb.p = data.frame(mu=means, size=(means^2)/max(vars-means, 0.0001))
 nb.q = t(apply(nb.p, 1, test.nb))
 
 ks.nb = sapply(1:nrow(d2), function (i) {

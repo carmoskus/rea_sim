@@ -49,7 +49,7 @@ fdr = function (arg.num) {
     mask = exp <= th
     ns = sum(mask)
     
-    if (ns == 0) {
+    if (is.na(ns) || ns == 0) {
         c(NA, 0)
     } else {
         sig = rownames(de)[mask]

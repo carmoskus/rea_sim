@@ -50,8 +50,9 @@ checker = function (name) {
 
 modes = c("edgeR", "voom_TMM", "ttest_log_TMM", "aim2_v6")
 
-out = t(sapply(modes, checker))
+out = data.frame(t(sapply(modes, checker)))
 colnames(out) = c("N", "Hit", "Miss", "Hit %", "Pearson R", "Spearman R", "RMSE")
+out$Analysis = rownames(out)
 
 write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/cor_FC1.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)
 

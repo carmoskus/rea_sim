@@ -120,7 +120,8 @@ checker = function (name) {
 ##           "aldex_iqlr_1", "aldex_iqlr_2")
 ## modes = c("deseq2_notrim", "edgeR", "voom_TMM", "ttest_log_TMM", "aim2_v1", "aim2_v2", "aim2_v3", "aim2_v4", "aim2_v5", "aim2_v6")
 ## modes = c("edgeR", "voom_TMM", "aim2_v1", "aim2_v2", "aim2_v6")
-modes = c("edgeR", "voom_TMM", "ttest_log_TMM")
+##modes = c("edgeR", "voom_TMM", "ttest_log_TMM")
+modes = c("edgeR", "voom_TMM", "ttest_log_TMM", "aim2_v6")
 
 out = sapply(modes, checker)
 write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check3.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)

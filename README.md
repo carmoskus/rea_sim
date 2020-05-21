@@ -8,6 +8,7 @@ rea_sim - Simulation analysis of differential expression testing in RNA-Seq data
 
 Subprograms:
 
-- sim1_create.R: Simulates data from NB distribution. Stores in sims/[a-z]/$n
+- sim1_createNB.R: Simulates data from NB distribution
+- sim1_createLN.R: Simulates data from LN distribution
 
 TODO: update this, grossly out of date

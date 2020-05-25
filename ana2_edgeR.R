@@ -19,9 +19,11 @@ norm.ms = function (x) calcNormFactors(x, method="none")
 norm.ns = function (x) {
     y = calcNormFactors(x, method="none")
     y$samples$lib.size = mean(y$samples$lib.size)
+    y
 }
 norms = list(TMM=norm.TMM, RLE=norm.RLE, UQ=norm.UQ, ms=norm.ms, ns=norm.ns)
 
+## Maybe remove this at some point and include _TMM suffix for edgeR; but that change would break other stuff now
 if (arg.norm == "TMM") {
     name = "edgeR"
 } else {
@@ -29,11 +31,11 @@ if (arg.norm == "TMM") {
 }
 
 norm = norms[[arg.norm]]
+subdir = paste0("sims/", arg.dir, "/")
 
 x = lapply(arg.start:arg.end, function (arg.num) {
-    subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
-    counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
-    col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
+    counts = as.matrix(read.table(paste0(subdir, arg.num, "/counts.txt"), header=TRUE, sep="\t", row.names=1))
+    col.info = read.table(paste0(subdir, arg.num, "/cols.txt"), header=TRUE, row.names=1, sep="\t")
 
     mod = model.matrix(~ col.info$group)
 

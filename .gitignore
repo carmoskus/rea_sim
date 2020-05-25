@@ -11,4 +11,4 @@ commands.txt
 commands?.txt
 q[1-9].[eo]
 q.*.[eo]
-q[1-9].oe
+*.oe

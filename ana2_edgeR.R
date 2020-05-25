@@ -32,6 +32,7 @@ if (arg.norm == "TMM") {
 
 norm = norms[[arg.norm]]
 subdir = paste0("sims/", arg.dir, "/")
+res.out = paste0("/", name, "_res.csv")
 
 x = lapply(arg.start:arg.end, function (arg.num) {
     counts = as.matrix(read.table(paste0(subdir, arg.num, "/counts.txt"), header=TRUE, sep="\t", row.names=1))
@@ -48,7 +49,7 @@ x = lapply(arg.start:arg.end, function (arg.num) {
     
     ## Output data
     lrt = glmLRT(fit, coef=2)
-    write.csv(topTags(lrt, n=100000), file=paste0(subdir, name, "_res.csv"))
+    write.csv(topTags(lrt, n=100000), file=paste0(subdir, arg.num, res.out))
 
     ## nfs = y$samples$norm.factors
     ## eff.lib.sizes = y$samples$lib.size * nfs

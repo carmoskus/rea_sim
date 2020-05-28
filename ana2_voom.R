@@ -1,39 +1,56 @@
 args = commandArgs(trailingOnly=TRUE)
-arg.dir = args[1]
-arg.num = args[2]
+arg.dir   = args[1]
+arg.norm  = args[2]
+arg.start = as.integer(args[3])
+arg.end   = as.integer(args[4])
 
-if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) == 0) {
-    write("Usage: ana_X.R subdir num", stderr())
+if (is.na(arg.dir) || nchar(arg.dir) == 0 || is.na(arg.norm) || nchar(arg.norm) == 0 || is.na(arg.start) || is.na(arg.end) ||
+    ! arg.norm %in% c("TMM","RLE","UQ","ms","ns")) {
+    write("Usage: ana2_X.R subdir norm num.start num.end", stderr())
     quit(save="no", status=1)
 }
 
-subdir = paste0("sims/", arg.dir, "/", arg.num, "/")
+library("edgeR")
+library("limma")
+
+norm.TMM = calcNormFactors
+norm.RLE = function (x) calcNormFactors(x, method="RLE")
+norm.UQ = function (x) calcNormFactors(x, method="upperquartile")
+norm.ms = function (x) calcNormFactors(x, method="none")
+norm.ns = function (x) {
+    y = calcNormFactors(x, method="none")
+    y$samples$lib.size = mean(y$samples$lib.size)
+    y
+}
+norms = list(TMM=norm.TMM, RLE=norm.RLE, UQ=norm.UQ, ms=norm.ms, ns=norm.ns)
 
 name = "voom"
+if (arg.norm != "ms") {
+    name = paste0(name, "_", arg.norm)
+}
 
-counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t", row.names=1))
+norm = norms[[arg.norm]]
+subdir = paste0("sims/", arg.dir, "/")
+res.out = paste0("/", name, "_res.csv")
 
-col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
+x = lapply(arg.start:arg.end, function (arg.num) {
+    counts = as.matrix(read.table(paste0(subdir, arg.num, "/counts.txt"), header=TRUE, sep="\t", row.names=1))
+    col.info = read.table(paste0(subdir, arg.num, "/cols.txt"), header=TRUE, row.names=1, sep="\t")
 
-# Do voom-limma
-library(limma)
+    dge = DGEList(counts=counts)
+    dge = norm(dge)
 
-design = model.matrix(~group, data=col.info)
-v = voom(counts, design)
-fit = lmFit(v, design)
-fit = eBayes(fit)
+    mod = model.matrix(~ col.info$group)
 
-# Make output data frame
-df = data.frame(rowMeans(v$E), fit$coefficients[,"groupb"], fit$t[,"groupb"], fit$df.residual, fit$p.value[,"groupb"])
-colnames(df) = c("baseMean", "log2FC", "t", "df", "p.value")
+    v = voom(dge, mod)
+    fit = lmFit(v, mod)
+    fit = eBayes(fit)
 
-df = df[order(df$p.value),]
-
-write.csv(df, file=paste0(subdir, name, "_res.csv"))
-
-#write.csv(log2(nc+1), file=paste0(subdir, name, "_log2counts.csv"))
-#write.table(1/nfs, file=paste0(subdir, name, "_sizes.txt"), sep="\t")
-#mc = data.frame(AveLogCPM=y$AveLogCPM, trended.dispersion=y$trended.dispersion, tagwise.dispersion=y$tagwise.dispersion)
-#rownames(mc) = rownames(y)
-#write.table(mc, file=paste0(subdir, name, "_meta.txt"), sep="\t")
-
+    ## Output data
+    df = data.frame(rowMeans(v$E), log2(rowMeans(2^v$E)), fit$coefficients[,"groupb"], fit$t[,"groupb"], fit$df.residual, fit$p.value[,"groupb"])
+    colnames(df) = c("baseMean", "logOfMeans", "log2FC", "t", "df", "p.value")
+    
+    df = df[order(df$p.value),]
+    
+    write.csv(df, file=paste0(subdir, name, "_res.csv"))
+})

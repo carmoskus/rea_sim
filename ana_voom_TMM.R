@@ -15,7 +15,7 @@ counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t
 
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 
-# Do voom-limma
+## Do voom-limma
 library(limma)
 library(edgeR)
 
@@ -28,7 +28,7 @@ v = voom(dge, design)
 fit = lmFit(v, design)
 fit = eBayes(fit)
 
-# Make output data frame
+## Make output data frame
 df = data.frame(rowMeans(v$E), log2(rowMeans(2^v$E)), fit$coefficients[,"groupb"], fit$t[,"groupb"], fit$df.residual, fit$p.value[,"groupb"])
 colnames(df) = c("baseMean", "logOfMeans", "log2FC", "t", "df", "p.value")
 

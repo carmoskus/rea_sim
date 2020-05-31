@@ -35,10 +35,3 @@ colnames(df) = c("baseMean", "logOfMeans", "log2FC", "t", "df", "p.value")
 df = df[order(df$p.value),]
 
 write.csv(df, file=paste0(subdir, name, "_res.csv"))
-
-#write.csv(log2(nc+1), file=paste0(subdir, name, "_log2counts.csv"))
-#write.table(1/nfs, file=paste0(subdir, name, "_sizes.txt"), sep="\t")
-#mc = data.frame(AveLogCPM=y$AveLogCPM, trended.dispersion=y$trended.dispersion, tagwise.dispersion=y$tagwise.dispersion)
-#rownames(mc) = rownames(y)
-#write.table(mc, file=paste0(subdir, name, "_meta.txt"), sep="\t")
-

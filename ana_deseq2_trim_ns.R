@@ -28,13 +28,3 @@ dds = DESeq(dds)
 res = results(dds, c('Group', 'b', 'a'))
 res = res[order(res$pvalue),]
 write.csv(as.data.frame(res), file=paste0(subdir, "deseq2_ns_res.csv"))
-
-write.csv(log2(counts(dds, normalized=TRUE)+1), file=paste0(subdir,"deseq2_ns_log2counts.csv"))
-
-# Output metadata
-write.table(sizeFactors(dds), file=paste0(subdir, "deseq2_ns_sizes.txt"), sep="\t")
-
-mc = as.data.frame(mcols(dds))
-rownames(mc) = rownames(dds)
-write.table(mc, file=paste0(subdir, "deseq2_ns_meta.txt"), sep="\t")
-

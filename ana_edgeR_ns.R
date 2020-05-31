@@ -30,21 +30,4 @@ fit = glmFit(y, mod)
 lrt = glmLRT(fit, coef=2)
 
 ## Output data
-#topTags(lrt, n=50)
 write.csv(topTags(lrt, n=100000), file=paste0(subdir, name, "_res.csv"))
-
-#sfs = y$samples$lib.size / mean(y$samples$lib.size)
-nfs = y$samples$norm.factors
-eff.lib.sizes = y$samples$lib.size * nfs
-sfs = eff.lib.sizes / mean(eff.lib.sizes)
-names(sfs) = colnames(y)
-nc = t(t(counts) / sfs)
-write.csv(log2(nc+1), file=paste0(subdir, name, "_log2counts.csv"))
-
-# Output metadata
-write.table(sfs, file=paste0(subdir, name, "_sizes.txt"), sep="\t")
-
-mc = data.frame(AveLogCPM=y$AveLogCPM, trended.dispersion=y$trended.dispersion, tagwise.dispersion=y$tagwise.dispersion)
-rownames(mc) = rownames(y)
-write.table(mc, file=paste0(subdir, name, "_meta.txt"), sep="\t")
-

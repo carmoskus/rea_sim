@@ -31,17 +31,11 @@ fit = glmFit(y, mod)
 lrt = glmLRT(fit, coef=2)
 write.csv(topTags(lrt, n=100000), file=paste0(subdir, name, "_res.csv"))
 
-## tt = topTags(lrt, n=100000, sort.by="none")$table
-## e.cpm = cpm(y)
-## e.lcpm = cpm(y, log=TRUE)
-
-#sfs = y$samples$lib.size / mean(y$samples$lib.size)
 nfs = y$samples$norm.factors
 eff.lib.sizes = y$samples$lib.size * nfs
 sfs = eff.lib.sizes / mean(eff.lib.sizes)
 names(sfs) = colnames(y)
 nc = t(t(counts) / sfs)
-## nc.l = log2(nc+1)
 write.csv(log2(nc+1), file=paste0(subdir, name, "_log2counts.csv"))
 
 # Output metadata

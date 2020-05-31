@@ -47,13 +47,3 @@ dds = DESeq(dds, minReplicatesForReplace=Inf)
 res = results(dds, c('Group', 'b', 'a'), cooksCutoff=Inf)
 res = res[order(res$pvalue),]
 write.csv(as.data.frame(res), file=paste0(subdir, name, "_res.csv"))
-
-write.csv(log2(counts(dds, normalized=TRUE)+1), file=paste0(subdir, name, "_log2counts.csv"))
-
-# Output metadata
-write.table(sizeFactors(dds), file=paste0(subdir, name, "_sizes.txt"), sep="\t")
-
-mc = as.data.frame(mcols(dds))
-rownames(mc) = rownames(dds)
-write.table(mc, file=paste0(subdir, name, "_meta.txt"), sep="\t")
-

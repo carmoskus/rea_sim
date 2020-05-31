@@ -16,18 +16,16 @@ counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 
 ## Normalize by TMM
-#num.reads = colSums(counts)
-#sfs = num.reads / mean(num.reads)
-library(limma)
 library(edgeR)
 
+## Load and normalize counts
 dge = DGEList(counts=counts)
 dge = calcNormFactors(dge)
 
 eff.lib.sizes = dge$samples$lib.size * dge$samples$norm.factors
-sfs2 = eff.lib.sizes / mean(eff.lib.sizes)
+sfs = eff.lib.sizes / mean(eff.lib.sizes)
 
-counts = t(t(counts) / sfs2)
+counts = t(t(counts) / sfs)
 
 ## Log-transform counts
 counts = log2(counts + 1)

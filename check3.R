@@ -96,8 +96,6 @@ checker = function (name) {
     out
 }
 
-## modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim", "voom_quantile", "voom_TMM", "ttest_none", "deseq2_ns", "ttest_log")
-## modes = c("deseq2", "edgeR", "voom", "ttest", "deseq2_notrim", "voom_quantile", "voom_TMM", "ttest_log")
 ## modes = c("deseq2_notrim", "deseq2_notrim_ms", "deseq2_notrim_ns", "deseq2_notrim_TMM", "deseq2_notrim_UQ", "deseq2_notrim_RLE",
 ##           "deseq2", "deseq2_trim_ms", "deseq2_ns", 
 ##           "edgeR", "edgeR_ms", "edgeR_ns", "edgeR_UQ", "edgeR_RLE", "edgeR_notrend",
@@ -122,7 +120,9 @@ checker = function (name) {
 ## modes = c("edgeR", "voom_TMM", "aim2_v1", "aim2_v2", "aim2_v6")
 ## modes = c("edgeR", "voom_TMM", "ttest_log_TMM")
 ## modes = c("edgeR", "voom_TMM", "ttest_log_TMM", "aim2_v6")
-modes = c("edgeR", "edgeR_RLE", "edgeR_UQ", "edgeR_ms", "edgeR_ns")
+edgeR.modes = c("edgeR", "edgeR_RLE", "edgeR_UQ", "edgeR_ms", "edgeR_ns")
+voom.modes = c("voom_TMM", "voom_RLE", "voom_UQ", "voom", "voom_ns")
+modes = c(edgeR.modes, voom.modes)
 
 out = sapply(modes, checker)
 write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check3.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)

@@ -38,7 +38,7 @@ x = lapply(arg.start:arg.end, function (arg.num) {
     counts = as.matrix(read.table(paste0(subdir, arg.num, "/counts.txt"), header=TRUE, sep="\t", row.names=1))
     col.info = read.table(paste0(subdir, arg.num, "/cols.txt"), header=TRUE, row.names=1, sep="\t")
 
-    mod = model.matrix(~ col.info$group)
+    mod = model.matrix(~ group, data=col.info)
 
     y = DGEList(counts=counts)
     y = norm(y)
@@ -50,19 +50,4 @@ x = lapply(arg.start:arg.end, function (arg.num) {
     ## Output data
     lrt = glmLRT(fit, coef=2)
     write.csv(topTags(lrt, n=100000), file=paste0(subdir, arg.num, res.out))
-
-    ## nfs = y$samples$norm.factors
-    ## eff.lib.sizes = y$samples$lib.size * nfs
-    ## sfs = eff.lib.sizes / mean(eff.lib.sizes)
-    ## names(sfs) = colnames(y)
-    ## nc = t(t(counts) / sfs)
-    ## write.csv(log2(nc+1), file=paste0(subdir, name, "_log2counts.csv"))
-
-    ## Output metadata
-    ## write.table(sfs, file=paste0(subdir, name, "_sizes.txt"), sep="\t")
-
-    ## mc = data.frame(AveLogCPM=y$AveLogCPM, trended.dispersion=y$trended.dispersion, tagwise.dispersion=y$tagwise.dispersion)
-    ## rownames(mc) = rownames(y)
-    ## write.table(mc, file=paste0(subdir, name, "_meta.txt"), sep="\t")
 })
-

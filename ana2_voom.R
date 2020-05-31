@@ -40,7 +40,7 @@ x = lapply(arg.start:arg.end, function (arg.num) {
     dge = DGEList(counts=counts)
     dge = norm(dge)
 
-    mod = model.matrix(~ col.info$group)
+    mod = model.matrix(~ group, data=col.info)
 
     v = voom(dge, mod)
     fit = lmFit(v, mod)
@@ -52,5 +52,5 @@ x = lapply(arg.start:arg.end, function (arg.num) {
     
     df = df[order(df$p.value),]
     
-    write.csv(df, file=paste0(subdir, name, "_res.csv"))
+    write.csv(df, file=paste0(subdir, arg.num, res.out))
 })

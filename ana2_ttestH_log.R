@@ -23,7 +23,7 @@ norm.ns = function (x) {
 }
 norms = list(TMM=norm.TMM, RLE=norm.RLE, UQ=norm.UQ, ms=norm.ms, ns=norm.ns)
 
-name = "ttest_log"
+name = "ttestH_log"
 if (arg.norm != "ms") {
     name = paste0(name, "_", arg.norm)
 }

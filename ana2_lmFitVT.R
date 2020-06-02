@@ -42,6 +42,7 @@ x = lapply(arg.start:arg.end, function (arg.num) {
     dge = DGEList(counts=counts)
     dge = norm(dge)
 
+    eff.lib.sizes = dge$samples$lib.size * dge$samples$norm.factors
     counts =  t(log2(t(counts + 0.5)/(eff.lib.sizes + 1) * 1e+06))
 
     design = model.matrix(~group, data=col.info)

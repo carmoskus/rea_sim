@@ -106,23 +106,17 @@ checker = function (name) {
 ##          "ttest_voomt_TMM", "ttest_voomt_ms", "ttest_voomt_ns",
 ##          "aim2_v1", "aim2_v2", "aim2_v3", "aim2_v4", "aim2_v5", "aim2_v6") #,
 ##          "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2")
-## modes = c("deseq2_notrim", "deseq2_notrim_ms",
-##           "edgeR","edgeR_ms",
-##           "voom", "voom_TMM",
-##           "ttest_log", "ttest_log_TMM",
-##           "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2")
-## modes = c("deseq2_notrim",
-##           "edgeR", "edgeR_notrend",
-##           "voom_TMM",
-##           "ttest_log_TMM",
-##           "aldex_iqlr_1", "aldex_iqlr_2")
-## modes = c("deseq2_notrim", "edgeR", "voom_TMM", "ttest_log_TMM", "aim2_v1", "aim2_v2", "aim2_v3", "aim2_v4", "aim2_v5", "aim2_v6")
-## modes = c("edgeR", "voom_TMM", "aim2_v1", "aim2_v2", "aim2_v6")
-## modes = c("edgeR", "voom_TMM", "ttest_log_TMM")
-## modes = c("edgeR", "voom_TMM", "ttest_log_TMM", "aim2_v6")
+## TODO: update so names include norms as suffix rather than specifying
+##s.norms = c("TMM", "RLE", "UQ", "ms", "ns")
+## TODO: add "quantile" in applicable situtions
 edgeR.modes = c("edgeR", "edgeR_RLE", "edgeR_UQ", "edgeR_ms", "edgeR_ns")
 voom.modes = c("voom_TMM", "voom_RLE", "voom_UQ", "voom", "voom_ns")
-modes = c(edgeR.modes, voom.modes)
+d2nt.modes = c("d2notrim_TMM", "d2notrim_RLE", "d2notrim_UQ", "d2notrim_ms", "d2notrim_ns", "d2notrim_DE2")
+d2t.modes = c("d2trim_TMM", "d2trim_RLE", "d2trim_UQ", "d2trim_ms", "d2trim_ns", "d2trim_DE2")
+ttestL.modes = c("ttest_log_TMM","ttest_log_RLE","ttest_log_UQ","ttest_log","ttest_log_ns")
+ttestHL.modes = c("ttestH_log_TMM","ttestH_log_RLE","ttestH_log_UQ","ttestH_log","ttestH_log_ns")
+lmFitVT.modes = c("lmFitVT_TMM","lmFitVT_RLE","lmFitVT_UQ","lmFitVT","lmFitVT_ns",
+modes = c(edgeR.modes, voom.modes, d2nt.modes, d2t.modes, ttestL.modes, ttestHL.modes, lmFitVT.modes)
 
 out = sapply(modes, checker)
 write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check3.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)

@@ -108,9 +108,9 @@ checker = function (name) {
 ##          "aldex_all_1", "aldex_all_2", "aldex_iqlr_1", "aldex_iqlr_2")
 ## TODO: update so names include norms as suffix rather than specifying
 ##s.norms = c("TMM", "RLE", "UQ", "ms", "ns")
-## TODO: add "quantile" in applicable situtions
+## Other norms: DE2 quantile
 edgeR.modes = c("edgeR", "edgeR_RLE", "edgeR_UQ", "edgeR_ms", "edgeR_ns")
-voom.modes = c("voom_TMM", "voom_RLE", "voom_UQ", "voom", "voom_ns")
+voom.modes = c("voom_TMM", "voom_RLE", "voom_UQ", "voom", "voom_ns", "voom_quantile")
 d2nt.modes = c("d2notrim_TMM", "d2notrim_RLE", "d2notrim_UQ", "d2notrim_ms", "d2notrim_ns", "d2notrim_DE2")
 d2t.modes = c("d2trim_TMM", "d2trim_RLE", "d2trim_UQ", "d2trim_ms", "d2trim_ns", "d2trim_DE2")
 ttestL.modes = c("ttest_log_TMM","ttest_log_RLE","ttest_log_UQ","ttest_log","ttest_log_ns")

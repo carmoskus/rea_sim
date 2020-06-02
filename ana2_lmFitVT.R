@@ -1,0 +1,59 @@
+args = commandArgs(trailingOnly=TRUE)
+arg.dir   = args[1]
+arg.norm  = args[2]
+arg.start = as.integer(args[3])
+arg.end   = as.integer(args[4])
+
+if (is.na(arg.dir) || nchar(arg.dir) == 0 || is.na(arg.norm) || nchar(arg.norm) == 0 || is.na(arg.start) || is.na(arg.end) ||
+    ! arg.norm %in% c("TMM","RLE","UQ","ms","ns")) {
+    write("Usage: ana2_X.R subdir norm num.start num.end", stderr())
+    quit(save="no", status=1)
+}
+
+library("limma")
+library("edgeR")
+
+norm.TMM = calcNormFactors
+norm.RLE = function (x) calcNormFactors(x, method="RLE")
+norm.UQ = function (x) calcNormFactors(x, method="upperquartile")
+norm.ms = function (x) calcNormFactors(x, method="none")
+norm.ns = function (x) {
+    y = calcNormFactors(x, method="none")
+    y$samples$lib.size = mean(y$samples$lib.size)
+    y
+}
+norms = list(TMM=norm.TMM, RLE=norm.RLE, UQ=norm.UQ, ms=norm.ms, ns=norm.ns)
+
+name = "lmFitVT"
+if (arg.norm != "ms") {
+    name = paste0(name, "_", arg.norm)
+}
+
+norm = norms[[arg.norm]]
+subdir = paste0("sims/", arg.dir, "/")
+res.out = paste0("/", name, "_res.csv")
+
+x = lapply(arg.start:arg.end, function (arg.num) {
+    counts = as.matrix(read.table(paste0(subdir, arg.num, "/counts.txt"), header=TRUE, sep="\t", row.names=1))
+    ## TODO: possibly add following line to all ana2 scripts; if so, also include warning about this
+    ## counts[is.na(counts)] = .Machine$integer.max
+    col.info = read.table(paste0(subdir, arg.num, "/cols.txt"), header=TRUE, row.names=1, sep="\t")
+
+    dge = DGEList(counts=counts)
+    dge = norm(dge)
+
+    counts =  t(log2(t(counts + 0.5)/(eff.lib.sizes + 1) * 1e+06))
+
+    design = model.matrix(~group, data=col.info)
+    
+    fit = lmFit(counts, design)
+    fit = eBayes(fit)
+    
+    ## Make output data frame
+    df = data.frame(rowMeans(counts), fit$coefficients[,"groupb"], fit$t[,"groupb"], fit$df.residual, fit$p.value[,"groupb"])
+    colnames(df) = c("baseMean", "log2FC", "t", "df", "p.value")
+
+    df = df[order(df$p.value),]
+
+    write.csv(as.data.frame(df), file=paste0(subdir, arg.num, res.out))
+})

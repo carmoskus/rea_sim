@@ -5,7 +5,7 @@ arg.start = as.integer(args[3])
 arg.end   = as.integer(args[4])
 
 if (is.na(arg.dir) || nchar(arg.dir) == 0 || is.na(arg.norm) || nchar(arg.norm) == 0 || is.na(arg.start) || is.na(arg.end) ||
-    ! arg.norm %in% c("TMM","RLE","UQ","ms","ns")) {
+    ! arg.norm %in% c("TMM","RLE","UQ","ms","ns","quantile")) {
     write("Usage: ana2_X.R subdir norm num.start num.end", stderr())
     quit(save="no", status=1)
 }
@@ -22,7 +22,7 @@ norm.ns = function (x) {
     y$samples$lib.size = mean(y$samples$lib.size)
     y
 }
-norms = list(TMM=norm.TMM, RLE=norm.RLE, UQ=norm.UQ, ms=norm.ms, ns=norm.ns)
+norms = list(TMM=norm.TMM, RLE=norm.RLE, UQ=norm.UQ, ms=norm.ms, ns=norm.ns, quantile=norm.ms)
 
 name = "voom"
 if (arg.norm != "ms") {
@@ -42,7 +42,11 @@ x = lapply(arg.start:arg.end, function (arg.num) {
 
     mod = model.matrix(~ group, data=col.info)
 
-    v = voom(dge, mod)
+    if (arg.norm == "quantile") {
+        v = voom(dge, mod, normalize.method="quantile")
+    } else {
+        v = voom(dge, mod)
+    }
     fit = lmFit(v, mod)
     fit = eBayes(fit)
 

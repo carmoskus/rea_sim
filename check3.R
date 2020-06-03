@@ -115,7 +115,7 @@ d2nt.modes = c("d2notrim_TMM", "d2notrim_RLE", "d2notrim_UQ", "d2notrim_ms", "d2
 d2t.modes = c("d2trim_TMM", "d2trim_RLE", "d2trim_UQ", "d2trim_ms", "d2trim_ns", "d2trim_DE2")
 ttestL.modes = c("ttest_log_TMM","ttest_log_RLE","ttest_log_UQ","ttest_log","ttest_log_ns")
 ttestHL.modes = c("ttestH_log_TMM","ttestH_log_RLE","ttestH_log_UQ","ttestH_log","ttestH_log_ns")
-lmFitVT.modes = c("lmFitVT_TMM","lmFitVT_RLE","lmFitVT_UQ","lmFitVT","lmFitVT_ns",
+lmFitVT.modes = c("lmFitVT_TMM","lmFitVT_RLE","lmFitVT_UQ","lmFitVT","lmFitVT_ns")
 modes = c(edgeR.modes, voom.modes, d2nt.modes, d2t.modes, ttestL.modes, ttestHL.modes, lmFitVT.modes)
 
 out = sapply(modes, checker)

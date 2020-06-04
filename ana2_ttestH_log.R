@@ -48,18 +48,31 @@ x = lapply(arg.start:arg.end, function (arg.num) {
     
     ## Log-transform counts
     counts = log2(counts+1)
-    
-    ## Do t-tests
-    test = function (row) {
-        r = t.test(row ~ col.info$group, var.equal=TRUE)
-        x = c(mean=mean(row), log2FC=r$estimate[2]-r$estimate[1], t=r$statistic, df=r$parameter, p.value=r$p.value)
-        names(x) = c("mean", "log2FC", "t", "df", "p.value")
-        x
-    }
-    res = as.data.frame(t(apply(counts, 1, test)))
-    
+
+    ## Calculate stats for groups 'a' and 'b'
+    a.mask = col.info$group=='a'
+    b.mask = ! a.mask
+    a.n = sum(a.mask)
+    b.n = sum(b.mask)
+    a = counts[,a.mask]
+    b = counts[,b.mask]
+    a.m = rowMeans(a)
+    b.m = rowMeans(b)
+    a.m2 = rowSums(a^2)
+    b.m2 = rowSums(b^2)
+    a.v = 1/(a.n-1) * (a.m2 - a.n*a.m^2)
+    b.v = 1/(b.n-1) * (b.m2 - b.n*b.m^2)
+
+    ## Calculate test stats
+    d.m = a.m - b.m
+    df = a.n + b.n - 2
+    v.p = ((a.n-1)*a.v + (b.n-1)*b.v) / df
+    t = d.m / sqrt(v.p*(1/a.n + 1/b.n))
+    p = 2*pt(abs(t), df, lower.tail=FALSE)
+
+    ## Make output
+    res = data.frame(mean=rowMeans(counts), log2FC=-d.m, t, df, p.value=p)
     res = res[order(res$p.value),]
     
-    ## Output
-    write.csv(as.data.frame(res), file=paste0(subdir, arg.num, res.out))
+    write.csv(res, file=paste0(subdir, arg.num, res.out))
 })

@@ -24,9 +24,6 @@ norm.ns = function (x) {
 norms = list(TMM=norm.TMM, RLE=norm.RLE, UQ=norm.UQ, ms=norm.ms, ns=norm.ns)
 
 name = "wilcox_log"
-if (arg.norm != "ms") {
-    name = paste0(name, "_", arg.norm)
-}
 
 norm = norms[[arg.norm]]
 subdir = paste0("sims/", arg.dir, "/")

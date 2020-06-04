@@ -24,7 +24,7 @@ norm.ns = function (x) {
 }
 norms = list(DE2=norm.ms, TMM=norm.TMM, RLE=norm.RLE, UQ=norm.UQ, ms=norm.ms, ns=norm.ns)
 
-name = "d2notrim"
+name = paste0("d2notrim_", arg.norm)
 
 norm = norms[[arg.norm]]
 subdir = paste0("sims/", arg.dir, "/")

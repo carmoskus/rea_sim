@@ -23,12 +23,7 @@ norm.ns = function (x) {
 }
 norms = list(TMM=norm.TMM, RLE=norm.RLE, UQ=norm.UQ, ms=norm.ms, ns=norm.ns)
 
-## Maybe remove this at some point and include _TMM suffix for edgeR; but that change would break other stuff now
-if (arg.norm == "TMM") {
-    name = "edgeR"
-} else {
-    name = paste0("edgeR_", arg.norm)
-}
+name = paste0("edgeR_", arg.norm)
 
 norm = norms[[arg.norm]]
 subdir = paste0("sims/", arg.dir, "/")

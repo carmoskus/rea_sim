@@ -23,7 +23,7 @@ norm.ns = function (x) {
 }
 norms = list(TMM=norm.TMM, RLE=norm.RLE, UQ=norm.UQ, ms=norm.ms, ns=norm.ns)
 
-name = "ttestH_log"
+name = paste0("ttestH_log_", arg.norm)
 
 norm = norms[[arg.norm]]
 subdir = paste0("sims/", arg.dir, "/")

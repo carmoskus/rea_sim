@@ -38,17 +38,13 @@ x = lapply(arg.start:arg.end, function (arg.num) {
     ## counts[is.na(counts)] = .Machine$integer.max
     col.info = read.table(paste0(subdir, arg.num, "/cols.txt"), header=TRUE, row.names=1, sep="\t")
 
+    ## Normalize and log-transform counts into logCPM with an offset
     dge = DGEList(counts=counts)
     dge = norm(dge)
 
     eff.lib.sizes = dge$samples$lib.size * dge$samples$norm.factors
-    sfs = eff.lib.sizes / mean(eff.lib.sizes)
-
-    counts = t(t(counts) / sfs)
+    counts =  t(log2(t(counts + 0.5)/(eff.lib.sizes + 1) * 1e+06))
     
-    ## Log-transform counts
-    counts = log2(counts+1)
-
     ## Calculate stats for groups 'a' and 'b'
     a.mask = col.info$group=='a'
     b.mask = ! a.mask

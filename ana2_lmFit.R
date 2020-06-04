@@ -51,10 +51,7 @@ x = lapply(arg.start:arg.end, function (arg.num) {
     fit = eBayes(fit)
     
     ## Make output data frame
-    df = data.frame(rowMeans(counts), fit$coefficients[,"groupb"], fit$t[,"groupb"], fit$df.residual, fit$p.value[,"groupb"])
-    colnames(df) = c("baseMean", "log2FC", "t", "df", "p.value")
-
+    df = data.frame(baseMean=rowMeans(counts), log2FC=fit$coefficients[,"groupb"], t=fit$t[,"groupb"], df=fit$df.residual, p.value=fit$p.value[,"groupb"])
     df = df[order(df$p.value),]
-
-    write.csv(as.data.frame(df), file=paste0(subdir, arg.num, res.out))
+    write.csv(df, file=paste0(subdir, arg.num, res.out))
 })

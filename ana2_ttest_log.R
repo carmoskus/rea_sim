@@ -23,7 +23,7 @@ norm.ns = function (x) {
 }
 norms = list(TMM=norm.TMM, RLE=norm.RLE, UQ=norm.UQ, ms=norm.ms, ns=norm.ns)
 
-name = "ttest_log"
+name = paste0("ttest_log_", arg.norm)
 
 norm = norms[[arg.norm]]
 subdir = paste0("sims/", arg.dir, "/")
@@ -35,28 +35,37 @@ x = lapply(arg.start:arg.end, function (arg.num) {
     ## counts[is.na(counts)] = .Machine$integer.max
     col.info = read.table(paste0(subdir, arg.num, "/cols.txt"), header=TRUE, row.names=1, sep="\t")
 
+    ## Normalize and log-transform counts into logCPM with an offset
     dge = DGEList(counts=counts)
     dge = norm(dge)
 
     eff.lib.sizes = dge$samples$lib.size * dge$samples$norm.factors
-    sfs = eff.lib.sizes / mean(eff.lib.sizes)
+    counts =  t(log2(t(counts + 0.5)/(eff.lib.sizes + 1) * 1e+06))
+    
+    ## Calculate stats for groups 'a' and 'b'
+    a.mask = col.info$group=='a'
+    b.mask = ! a.mask
+    a.n = sum(a.mask)
+    b.n = sum(b.mask)
+    a = counts[,a.mask]
+    b = counts[,b.mask]
+    a.m = rowMeans(a)
+    b.m = rowMeans(b)
+    a.m2 = rowSums(a^2)
+    b.m2 = rowSums(b^2)
+    a.v = 1/(a.n-1) * (a.m2 - a.n*a.m^2)
+    b.v = 1/(b.n-1) * (b.m2 - b.n*b.m^2)
 
-    counts = t(t(counts) / sfs)
-    
-    ## Log-transform counts
-    counts = log2(counts+1)
-    
-    ## Do t-tests
-    test = function (row) {
-        r = t.test(row ~ col.info$group)
-        x = c(mean=mean(row), log2FC=r$estimate[2]-r$estimate[1], t=r$statistic, df=r$parameter, p.value=r$p.value)
-        names(x) = c("mean", "log2FC", "t", "df", "p.value")
-        x
-    }
-    res = as.data.frame(t(apply(counts, 1, test)))
-    
+    ## Calculate test stats
+    d.m = a.m - b.m
+    v.p = a.v/a.n + b.v/b.n
+    df = v.p^2 / ( (a.v/a.n)^2 / (a.n-1) + (b.v/b.n)^2 / (b.n-1) )
+    t = d.m / sqrt(v.p)
+    p = 2*pt(abs(t), df, lower.tail=FALSE)
+
+    ## Make output
+    res = data.frame(mean=rowMeans(counts), log2FC=-d.m, t, df, p.value=p)
     res = res[order(res$p.value),]
     
-    ## Output
-    write.csv(as.data.frame(res), file=paste0(subdir, arg.num, res.out))
+    write.csv(res, file=paste0(subdir, arg.num, res.out))
 })

@@ -117,7 +117,7 @@ ttestL.modes = c("ttest_log_TMM","ttest_log_RLE","ttest_log_UQ","ttest_log_ms","
 ttestHL.modes = c("ttestH_log_TMM","ttestH_log_RLE","ttestH_log_UQ","ttestH_log_ms","ttestH_log_ns")
 lmFitVT.modes = c("lmFit_TMM","lmFit_RLE","lmFit_UQ","lmFit_ms","lmFit_ns")
 #modes = c(edgeR.modes, voom.modes, d2nt.modes, d2t.modes, ttestL.modes, ttestHL.modes, lmFitVT.modes)
-modes = c(edgeR.modes, ttestHL.modes)
+modes = c(ttestHL.modes)
 
 out = sapply(modes, checker)
 write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check3.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)

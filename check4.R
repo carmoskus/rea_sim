@@ -10,7 +10,7 @@ if (is.na(arg.dir) || nchar(arg.dir) == 0 || is.na(arg.start) || is.na(arg.end))
 
 th = c(2^-(200:6), 2^-6*2:62, 1-2^-(6:50))
 
-checker = function (arg.dir) function (name) {
+checker = function (arg.dir, name) {
     de = read.csv(paste0("sims/", arg.dir, "/", arg.num, "/", name,"_res.csv"), row.names=1)
     nam = names(de)
     
@@ -121,8 +121,8 @@ lmFitVT.modes = c("lmFit_TMM","lmFit_RLE","lmFit_UQ","lmFit_ms","lmFit_ns")
 modes = c(ttestHL.modes)
 
 lapply(arg.start:arg.end,  function (arg.num) {
-    out = sapply(modes, checker(arg.num))
-    write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check3.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)
+    out = sapply(modes, function (mode) checker(arg.num, mode))
+    write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check4.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)
 })
 
 warnings()

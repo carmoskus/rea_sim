@@ -1,15 +1,16 @@
 args = commandArgs(trailingOnly=TRUE)
 arg.dir = args[1]
-arg.num = args[2]
+arg.start = as.integer(args[2])
+arg.end = as.integer(args[3])
 
-if (is.na(arg.dir) || is.na(arg.num) || nchar(arg.dir) == 0 || nchar(arg.num) == 0) {
-    write("Usage: prog.R subdir num", stderr())
+if (is.na(arg.dir) || nchar(arg.dir) == 0 || is.na(arg.start) || is.na(arg.end)) {
+    write("Usage: prog.R subdir num.start num.end", stderr())
     quit(save="no", status=1)
 }
 
 th = c(2^-(200:6), 2^-6*2:62, 1-2^-(6:50))
 
-checker = function (name) {
+checker = function (arg.dir) function (name) {
     de = read.csv(paste0("sims/", arg.dir, "/", arg.num, "/", name,"_res.csv"), row.names=1)
     nam = names(de)
     
@@ -119,7 +120,9 @@ lmFitVT.modes = c("lmFit_TMM","lmFit_RLE","lmFit_UQ","lmFit_ms","lmFit_ns")
 #modes = c(edgeR.modes, voom.modes, d2nt.modes, d2t.modes, ttestL.modes, ttestHL.modes, lmFitVT.modes)
 modes = c(ttestHL.modes)
 
-out = sapply(modes, checker)
-write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check3.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)
+lapply(arg.start:arg.end,  function (arg.num) {
+    out = sapply(modes, checker(arg.num))
+    write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check3.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)
+})
 
 warnings()

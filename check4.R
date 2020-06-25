@@ -111,14 +111,14 @@ checker = function (arg.num, name) {
 ##s.norms = c("TMM", "RLE", "UQ", "ms", "ns")
 ## Other norms: DE2 quantile
 edgeR.modes = c("edgeR_TMM", "edgeR_RLE", "edgeR_UQ", "edgeR_ms", "edgeR_ns")
-voom.modes = c("voom_TMM", "voom_RLE", "voom_UQ", "voom_ms", "voom_ns", "voom_quantile")
 d2nt.modes = c("d2notrim_TMM", "d2notrim_RLE", "d2notrim_UQ", "d2notrim_ms", "d2notrim_ns", "d2notrim_DE2")
+voom.modes = c("voom_TMM", "voom_RLE", "voom_UQ", "voom_ms", "voom_ns", "voom_quantile")
 d2t.modes = c("d2trim_TMM", "d2trim_RLE", "d2trim_UQ", "d2trim_ms", "d2trim_ns", "d2trim_DE2")
 ttestL.modes = c("ttest_log_TMM","ttest_log_RLE","ttest_log_UQ","ttest_log_ms","ttest_log_ns")
+lmFit.modes = c("lmFit_TMM","lmFit_RLE","lmFit_UQ","lmFit_ms","lmFit_ns")
 ttestHL.modes = c("ttestH_log_TMM","ttestH_log_RLE","ttestH_log_UQ","ttestH_log_ms","ttestH_log_ns")
-lmFitVT.modes = c("lmFit_TMM","lmFit_RLE","lmFit_UQ","lmFit_ms","lmFit_ns")
-#modes = c(edgeR.modes, voom.modes, d2nt.modes, d2t.modes, ttestL.modes, ttestHL.modes, lmFitVT.modes)
-modes = c(ttestHL.modes)
+
+modes = c(edgeR.modes, voom.modes, d2nt.modes, d2t.modes, ttestL.modes, ttestHL.modes, lmFit.modes)
 
 o = lapply(arg.start:arg.end,  function (arg.num) {
     out = sapply(modes, function (mode) checker(arg.num, mode))

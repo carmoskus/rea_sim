@@ -1,4 +1,5 @@
-## Save an initial metadata file
+## STEP 1 --- Create metadata files
+# Save an initial metadata file
 mkdir sims/
 mkdir sims/foo/
 cat > sims/foo/meta.txt <<ENDHERE
@@ -13,7 +14,7 @@ psi.offset      0.16
 n       15000
 n.zeros 0
 n.dex   1000
-ns.g    50
+ns.g    5
 min.fc  0.01
 max.fc  2
 size.min        2
@@ -25,28 +26,30 @@ ENDHERE
 # Copies settings in 'foo' but replaces 'ns.g' with 10 or 25
 Rscript sequence.R "foo" ns.g 10 25
 
-## Create sets of data
-p=size4_ns.g_25
-for p in foo bar foo_ns.g 25
+## STEP 2 --- Create sets of data
+# WARNING: commands are asynchonous; you should check that they complete before running the next step
+for s in foo foo_ns.g_10 foo_ns.g_25
+do
 for d in LN NB
 do
 mkdir sims/${p}_$d
 cp sims/$p/meta.txt sims/${p}_$d
-for i in `seq   1  100` ; do Rscript create$d.R ${p}_$d $i; done & disown #i
-for i in `seq 101  200` ; do Rscript create$d.R ${p}_$d $i; done & disown #i
-for i in `seq 201  300` ; do Rscript create$d.R ${p}_$d $i; done & disown #i
-for i in `seq 301  400` ; do Rscript create$d.R ${p}_$d $i; done & disown #i
-for i in `seq 401  500` ; do Rscript create$d.R ${p}_$d $i; done & disown #i
-for i in `seq 501  600` ; do Rscript create$d.R ${p}_$d $i; done & disown #i
-for i in `seq 601  700` ; do Rscript create$d.R ${p}_$d $i; done & disown #i
-for i in `seq 701  800` ; do Rscript create$d.R ${p}_$d $i; done & disown #i
-for i in `seq 801  900` ; do Rscript create$d.R ${p}_$d $i; done & disown #i
-for i in `seq 901 1000` ; do Rscript create$d.R ${p}_$d $i; done & disown #i
-done > q1b.oe 2>&1 #d
+for i in `seq   1  100` ; do Rscript create$d.R ${s}_$d $i; done & disown #i
+for i in `seq 101  200` ; do Rscript create$d.R ${s}_$d $i; done & disown #i
+for i in `seq 201  300` ; do Rscript create$d.R ${s}_$d $i; done & disown #i
+for i in `seq 301  400` ; do Rscript create$d.R ${s}_$d $i; done & disown #i
+for i in `seq 401  500` ; do Rscript create$d.R ${s}_$d $i; done & disown #i
+for i in `seq 501  600` ; do Rscript create$d.R ${s}_$d $i; done & disown #i
+for i in `seq 601  700` ; do Rscript create$d.R ${s}_$d $i; done & disown #i
+for i in `seq 701  800` ; do Rscript create$d.R ${s}_$d $i; done & disown #i
+for i in `seq 801  900` ; do Rscript create$d.R ${s}_$d $i; done & disown #i
+for i in `seq 901 1000` ; do Rscript create$d.R ${s}_$d $i; done & disown #i
+done > q1.oe 2>&1 #d
+done
 
-
-## Run analyses using ana2 programs
-for s in size4
+## STEP 3 --- Run analyses using ana2 programs
+# Run methods using normal distribution in sets of 2 as they run quickly
+for s in foo foo_ns.g_10 foo_ns.g_25
 do
 for d in LN NB
 do
@@ -61,7 +64,8 @@ done #a
 done #d
 done > q2.oe 2>&1 #s
 
-for s in size4_ns.g_25
+# Run these methods using negative binomial distribution in sets of 4 as they are slower
+for s in foo foo_ns.g_10 foo_ns.g_25
 do
 for d in LN NB
 do
@@ -78,35 +82,10 @@ done #a
 done #d
 done > q2b.oe 2>&1 #s
 
-for s in size4
-do
-for d in LN NB
-do
-for a in voom #lmFit ttest NOT_IMPLEMENTED
-do
-Rscript ana2_$a.R "${s}_$d" quantile   1  250 & disown
-Rscript ana2_$a.R "${s}_$d" quantile 251  500 & disown
-Rscript ana2_$a.R "${s}_$d" quantile 501  750 & disown
-Rscript ana2_$a.R "${s}_$d" quantile 751 1000 & disown
-done #a
-done #d
-done > q2c.oe 2>&1 #s
 
-for s in size4
-do
-for d in LN NB
-do
-for i in `seq 1 10 1000`
-do
-(( e = i + 9 ))
-Rscript ana2_voom.R "${s}_$d" quantile "$i" "$e" \& disown
-done #i
-done #d
-done > q2c.oe 2>&1 #s
-
-
-## Run follow-up
-for s in size4 # just waiting on quantile
+## STEP 4 --- Run follow-up to look at result of analyses
+# Code to run in batch of 10
+for s in foo foo_ns.g_10 foo_ns.g_25
 do
 for d in LN NB
 do
@@ -123,7 +102,8 @@ Rscript check4.R "${s}_$d" 901 1000 & disown
 done #d
 done > q3.oe 2>&1 #s
 
-for s in size4
+# More advanced/adjustable code that runs in batch of 100 and prints what cmds are run
+for s in foo foo_ns.g_10 foo_ns.g_25
 do
 for d in LN NB
 do
@@ -136,32 +116,15 @@ done #i
 done #d
 done > q3.oe 2>&1 #s
 
-## Run ROCP and FDR
-#for a in edgeR_TMM edgeR_RLE edgeR_UQ edgeR_ms edgeR_ns
-#for a in d2notrim_TMM d2notrim_RLE d2notrim_UQ d2notrim_ms d2notrim_ns d2notrim_DE2
-#for a in voom_TMM voom_RLE voom_UQ voom_ms voom_ns voom_quantile
-#for a in d2trim_TMM d2trim_RLE d2trim_UQ d2trim_ms d2trim_ns d2trim_DE2
-#for a in ttest_log_TMM ttest_log_RLE ttest_log_UQ ttest_log_ms ttest_log_ns
-#for a in lmFit_TMM  lmFit_RLE  lmFit_UQ  lmFit_ms  lmFit_ns
-#for a in ttestH_log_TMM ttestH_log_RLE ttestH_log_UQ ttestH_log_ms ttestH_log_ns
 
+## STEP 5 --- Run ROCP and FDRSP
 for a in ttestH_log_TMM ttestH_log_RLE ttestH_log_UQ ttestH_log_ms ttestH_log_ns lmFit_TMM  lmFit_RLE  lmFit_UQ  lmFit_ms  lmFit_ns ttest_log_TMM ttest_log_RLE ttest_log_UQ ttest_log_ms ttest_log_ns d2trim_TMM d2trim_RLE d2trim_UQ d2trim_ms d2trim_ns d2trim_DE2 voom_TMM voom_RLE voom_UQ voom_ms voom_ns voom_quantile d2notrim_TMM d2notrim_RLE d2notrim_UQ d2notrim_ms d2notrim_ns d2notrim_DE2 edgeR_TMM edgeR_RLE edgeR_UQ edgeR_ms edgeR_ns 
 do
-for s in size3_ns.g_25 # size3
+for s in foo foo_ns.g_10 foo_ns.g_25
 do
 for d in LN NB
 do
 Rscript fdr3sp.R "${s}_$d" "$a" 0.05 fdr & disown
-done #d
-done #s
-done > q4.oe 2>&1 #a
-
-for a in ttestH_log_TMM ttestH_log_RLE ttestH_log_UQ ttestH_log_ms ttestH_log_ns lmFit_TMM  lmFit_RLE  lmFit_UQ  lmFit_ms  lmFit_ns ttest_log_TMM ttest_log_RLE ttest_log_UQ ttest_log_ms ttest_log_ns d2trim_TMM d2trim_RLE d2trim_UQ d2trim_ms d2trim_ns d2trim_DE2 voom_TMM voom_RLE voom_UQ voom_ms voom_ns voom_quantile d2notrim_TMM d2notrim_RLE d2notrim_UQ d2notrim_ms d2notrim_ns d2notrim_DE2 edgeR_TMM edgeR_RLE edgeR_UQ edgeR_ms edgeR_ns 
-do
-for s in size3
-do
-for d in LN NB
-do
 Rscript rocp.R "${s}_$d" "$a" un & disown
 done #d
 done #s

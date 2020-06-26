@@ -26,7 +26,7 @@ if (!file.exists(conf.file)) {
     quit(save="no", status=1)
 }
 
-conf.data = read.table(conf.file, sep="\t", stringsAsFactors=FALSE, row.names=1)
+conf.data = read.table(conf.file, stringsAsFactors=FALSE, row.names=1)
 conf.data = rbind(conf.data, mode=1)
 conf.data = rbind(conf.data, v=5)
 conf = as.list(conf.data$V2)

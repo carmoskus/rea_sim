@@ -16,7 +16,7 @@ counts = as.matrix(read.table(paste0(subdir, "counts.txt"), header=TRUE, sep="\t
 col.info = read.table(paste0(subdir, "cols.txt"), header=TRUE, row.names=1, sep="\t")
 
 # Start edgeR
-library("edgeR")
+library(edgeR)
 
 mod = model.matrix(~ col.info$group)
 

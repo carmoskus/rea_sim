@@ -10,8 +10,8 @@ if (is.na(arg.dir) || nchar(arg.dir) == 0 || is.na(arg.norm) || nchar(arg.norm) 
     quit(save="no", status=1)
 }
 
-library("edgeR")
-library("limma")
+library(edgeR)
+library(limma)
 
 norm.TMM = calcNormFactors
 norm.RLE = function (x) calcNormFactors(x, method="RLE")

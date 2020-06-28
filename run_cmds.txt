@@ -110,8 +110,7 @@ do
 for i in `seq 1 10 1000`
 do
 (( e = i + 9 ))
-echo Rscript check4.R "${s}_$d" "$i" "$e" \& disown
-Rscript check4.R "${s}_$d" "$i" "$e" & disown
+Rscript check.R "${s}_$d" "$i" "$e" & disown
 done #i
 done #d
 done > q3.oe 2>&1 #s

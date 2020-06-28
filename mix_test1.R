@@ -8,7 +8,7 @@ if (is.na(arg.dir) || nchar(arg.dir) == 0 || is.na(arg.start) || is.na(arg.end))
     quit(save="no", status=1)
 }
 
-name = "mix1"
+name = "mix_test1"
 
 path = paste0("sims/", arg.dir, "/")
 

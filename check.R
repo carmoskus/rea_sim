@@ -123,7 +123,7 @@ modes = c("voom_TMM", "voom_UQ", "voom_ms", "voom_ns", "edgeR_TMM", "edgeR_UQ", 
 
 o = lapply(arg.start:arg.end,  function (arg.num) {
     out = sapply(modes, function (mode) checker(arg.num, mode))
-    write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check4.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)
+    write.table(out, file=paste0("sims/", arg.dir, "/", arg.num, "/check.txt"), row.names=TRUE, col.names=TRUE, sep="\t", quote=FALSE)
 })
 
 warnings()

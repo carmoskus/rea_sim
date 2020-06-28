@@ -15,7 +15,7 @@ if (is.na(arg.dir) || is.na(analysis) || nchar(arg.dir) == 0 || nchar(analysis) 
 ## Function to calculate FDR in named run
 roc.exp = function (i) {
     ## Load data
-    d = read.table(paste0("sims/", arg.dir, "/", i, "/check4.txt"), header=TRUE, sep="\t", row.names=1)
+    d = read.table(paste0("sims/", arg.dir, "/", i, "/check.txt"), header=TRUE, sep="\t", row.names=1)
     if (! analysis %in% names(d)) {
         write(paste0("Could not find analysis '", analysis, "'"), stderr())
         quit(save="no", status=1)

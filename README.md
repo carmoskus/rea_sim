@@ -6,7 +6,7 @@ rea_sim - Simulation analysis of differential expression testing in RNA-Seq data
 - simulate RNA-Seq counts from a variety of statistical models (negative binomial, normal, log-normal, multinomial)
 - automate running a variety of differential expression analyses using various programs and combinations of covariates (DESeq2, edgeR, voom-limma, etc.)
 
-For an example pipeline to be copied and pasted into the command line, look at [run_cmds.txt]
+For an example pipeline to be copied and pasted into the command line, look at [run_cmds.txt](run_cmds.txt)
 
 Subprograms:
 - The create scripts

@@ -24,7 +24,10 @@ fdr = function (arg.num) {
     de = de[exp.genes,]
     nam = names(de)
 
-    if ("logCPM" %in% nam) {
+    if ("p12" %in% nam) {
+        exp = de$p12
+        dir = de$z12
+    } else if ("logCPM" %in% nam) {
         ## edgeR
         exp = de$PValue
         dir = de$logFC
